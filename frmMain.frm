@@ -1096,7 +1096,7 @@ Private Sub timFileReader_Timer()
             imgPKMN1HPbarGrey(I).Width = 735
         End If
         pkmnCurEXP(I) = lines(8 + (9 * I))
-        pkmnMaxEXP(I) = expNeeded(lines(4 + (9 * I)), getExpGroup(lines(0 + (9 * I))))
+        pkmnMaxEXP(I) = expNeeded((lines(4 + (9 * I)) + 1), getExpGroup(lines(0 + (9 * I))))
         buffer = ((pkmnCurEXP(I) / pkmnMaxEXP(I)) * 100) * 7.2
         If imgPKMN1EXPbarBlue(I).Width <> buffer Then
             imgPKMN1EXPbarBlue(I).Width = buffer
