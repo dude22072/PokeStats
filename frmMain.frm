@@ -40,8 +40,9 @@ Begin VB.Form frmMain
          Top             =   1160
          Width           =   975
       End
-      Begin VB.Image Image12 
+      Begin VB.Image imgPKMN1HPbarFrame 
          Height          =   120
+         Index           =   5
          Left            =   0
          Picture         =   "frmMain.frx":06DE
          Top             =   1050
@@ -198,8 +199,9 @@ Begin VB.Form frmMain
          Top             =   1160
          Width           =   975
       End
-      Begin VB.Image Image11 
+      Begin VB.Image imgPKMN1HPbarFrame 
          Height          =   120
+         Index           =   4
          Left            =   0
          Picture         =   "frmMain.frx":2D07
          Top             =   1050
@@ -356,8 +358,9 @@ Begin VB.Form frmMain
          Top             =   1160
          Width           =   975
       End
-      Begin VB.Image Image10 
+      Begin VB.Image imgPKMN1HPbarFrame 
          Height          =   120
+         Index           =   3
          Left            =   0
          Picture         =   "frmMain.frx":5330
          Top             =   1050
@@ -514,8 +517,9 @@ Begin VB.Form frmMain
          Top             =   1160
          Width           =   975
       End
-      Begin VB.Image Image9 
+      Begin VB.Image imgPKMN1HPbarFrame 
          Height          =   120
+         Index           =   2
          Left            =   0
          Picture         =   "frmMain.frx":7959
          Top             =   1050
@@ -672,8 +676,9 @@ Begin VB.Form frmMain
          Top             =   1160
          Width           =   975
       End
-      Begin VB.Image Image8 
+      Begin VB.Image imgPKMN1HPbarFrame 
          Height          =   120
+         Index           =   1
          Left            =   0
          Picture         =   "frmMain.frx":9F82
          Top             =   1050
@@ -858,8 +863,9 @@ Begin VB.Form frmMain
          Top             =   360
          Width           =   495
       End
-      Begin VB.Image Image7 
+      Begin VB.Image imgPKMN1HPbarFrame 
          Height          =   120
+         Index           =   0
          Left            =   0
          Picture         =   "frmMain.frx":C5AB
          Top             =   1050
@@ -1040,7 +1046,7 @@ Dim pkmnStatus(5) As Long
 Dim buffer As Long
 
 Private Sub Form_Load()
-    Dim i As Integer
+    Dim I As Integer
     fraPokemon1.BorderStyle = 0
     fraPokemon2.BorderStyle = 0
     fraPokemon3.BorderStyle = 0
@@ -1048,58 +1054,74 @@ Private Sub Form_Load()
     fraPokemon5.BorderStyle = 0
     fraPokemon6.BorderStyle = 0
     Me.BackColor = &H0
-    For i = 0 To 5
-        pkmnStatus(i) = 100
+    For I = 0 To 5
+        pkmnStatus(I) = 100
     Next
 End Sub
 
 Private Sub timFileReader_Timer()
     Dim lines() As String
-    Dim i As Integer
+    Dim I As Integer
     lines = Split(LoadFile(CommonDialog1.FileName), vbCrLf)
-    For i = 0 To 5
+    For I = 0 To 5
     'Pokemon i
-    If pkmnCur(i) <> lines(0 + (9 * i)) Then
-        imgPKMN1Sprite(i).Picture = LoadPicture(App.Path & "\sprites\" & lines(0 + (9 * i)) & ".gif")
-        pkmnCur(i) = lines(0 + (9 * i))
+    If pkmnCur(I) <> lines(0 + (9 * I)) Then
+        imgPKMN1Sprite(I).Picture = LoadPicture(App.Path & "\sprites\" & lines(0 + (9 * I)) & ".gif")
+        pkmnCur(I) = lines(0 + (9 * I))
     End If
-    lblPKMN1Nick(i).Caption = lines(1 + (9 * i))
-    lblPKMN1LVL(i).Caption = lines(4 + (9 * i))
-    pkmnCurHP(i) = lines(2 + (9 * i))
-    pkmnMaxHP(i) = lines(3 + (9 * i))
-    buffer = ((pkmnCurHP(i) / pkmnMaxHP(i)) * 100) * 7.35
-    If imgPKMN1HPbarGREEN(i).Width <> buffer Then
-        imgPKMN1HPbarGREEN(i).Width = buffer
-        imgPKMN1HPbarYellow(i).Width = buffer
-        imgPKMN1HPbarRed(i).Width = buffer
-        imgPKMN1HPbarGrey(i).Width = 735
-    End If
-    pkmnCurEXP(i) = lines(8 + (9 * i))
-    pkmnMaxEXP(i) = expNeeded(lines(4 + (9 * i)), getExpGroup(lines(0 + (9 * i))))
-    buffer = ((pkmnCurEXP(i) / pkmnMaxEXP(i)) * 100) * 7.2
-    If imgPKMN1EXPbarBlue(i).Width <> buffer Then
-        imgPKMN1EXPbarBlue(i).Width = buffer
-    End If
-    If pkmnCurHP(i) > 0 Then
-        If pkmnStatus(i) <> lines(5 + (9 * i)) Then
-            pkmnStatus(i) = lines(5 + (9 * i))
-            Select Case pkmnStatus(i)
-            Case 3
-                imgPKMNStatus(i).Picture = LoadPicture(App.Path & "\status\" & "SLP" & ".gif")
-            Case 4
-                imgPKMNStatus(i).Picture = LoadPicture(App.Path & "\status\" & "PSN" & ".gif")
-            Case 5
-                imgPKMNStatus(i).Picture = LoadPicture(App.Path & "\status\" & "BRN" & ".gif")
-            Case 6
-                imgPKMNStatus(i).Picture = LoadPicture(App.Path & "\status\" & "FRZ" & ".gif")
-            Case 7
-                imgPKMNStatus(i).Picture = LoadPicture(App.Path & "\status\" & "PAR" & ".gif")
-            Case Else
-                imgPKMNStatus(i).Picture = LoadPicture(App.Path & "\status\NIL.gif")
-            End Select
-        End If
+    Debug.Print (pkmnCur(I))
+    If pkmnCur(I) = "None" Then
+        imgPKMN1HPbarGREEN(I).Width = 0
+        imgPKMN1HPbarYellow(I).Width = 0
+        imgPKMN1HPbarRed(I).Width = 0
+        imgPKMN1HPbarGrey(I).Width = 735
+        lblPKMN1Nick(I).Caption = ""
+        pkmnCurHP(I) = 0
+        pkmnMaxHP(I) = 0
+        pkmnCurEXP(I) = 0
+        pkmnMaxEXP(I) = 0
+        imgPKMN1EXPbarBlue(I).Width = 0
+        visbleState False, I
     Else
-        imgPKMNStatus(i).Picture = LoadPicture(App.Path & "\status\" & "FNT" & ".gif")
+        visbleState True, I
+        lblPKMN1Nick(I).Caption = lines(1 + (9 * I))
+        lblPKMN1LVL(I).Caption = lines(4 + (9 * I))
+        pkmnCurHP(I) = lines(2 + (9 * I))
+        pkmnMaxHP(I) = lines(3 + (9 * I))
+        buffer = ((pkmnCurHP(I) / pkmnMaxHP(I)) * 100) * 7.35
+        If imgPKMN1HPbarGREEN(I).Width <> buffer Then
+            imgPKMN1HPbarGREEN(I).Width = buffer
+            imgPKMN1HPbarYellow(I).Width = buffer
+            imgPKMN1HPbarRed(I).Width = buffer
+            imgPKMN1HPbarGrey(I).Width = 735
+        End If
+        pkmnCurEXP(I) = lines(8 + (9 * I))
+        pkmnMaxEXP(I) = expNeeded(lines(4 + (9 * I)), getExpGroup(lines(0 + (9 * I))))
+        buffer = ((pkmnCurEXP(I) / pkmnMaxEXP(I)) * 100) * 7.2
+        If imgPKMN1EXPbarBlue(I).Width <> buffer Then
+            imgPKMN1EXPbarBlue(I).Width = buffer
+        End If
+        If pkmnCurHP(I) > 0 Then
+            If pkmnStatus(I) <> lines(5 + (9 * I)) Then
+                pkmnStatus(I) = lines(5 + (9 * I))
+                Select Case pkmnStatus(I)
+                Case 3
+                    imgPKMNStatus(I).Picture = LoadPicture(App.Path & "\status\" & "SLP" & ".gif")
+                Case 4
+                    imgPKMNStatus(I).Picture = LoadPicture(App.Path & "\status\" & "PSN" & ".gif")
+                Case 5
+                    imgPKMNStatus(I).Picture = LoadPicture(App.Path & "\status\" & "BRN" & ".gif")
+                Case 6
+                    imgPKMNStatus(I).Picture = LoadPicture(App.Path & "\status\" & "FRZ" & ".gif")
+                Case 7
+                    imgPKMNStatus(I).Picture = LoadPicture(App.Path & "\status\" & "PAR" & ".gif")
+                Case Else
+                    imgPKMNStatus(I).Picture = LoadPicture(App.Path & "\status\NIL.gif")
+                End Select
+            End If
+        Else
+            imgPKMNStatus(I).Picture = LoadPicture(App.Path & "\status\" & "FNT" & ".gif")
+        End If
     End If
     Next
 End Sub
@@ -1117,21 +1139,40 @@ End Function
 Private Sub timHPBarColour_Timer()
     Dim num As Long
     num = 735
-    For i = 0 To 5
-    If imgPKMN1HPbarGREEN(i).Width <= (num / 4) Then
-        imgPKMN1HPbarGREEN(i).Visible = False
-        imgPKMN1HPbarYellow(i).Visible = False
-        imgPKMN1HPbarRed(i).Visible = True
+    For I = 0 To 5
+    If pkmnCur(I) = "None" Then
+        imgPKMN1HPbarGREEN(I).Visible = False
+        imgPKMN1HPbarYellow(I).Visible = False
+        imgPKMN1HPbarRed(I).Visible = False
+        imgPKMN1HPbarGrey(I).Visible = False
     Else
-        If imgPKMN1HPbarGREEN(i).Width <= (num / 2) Then
-            imgPKMN1HPbarGREEN(i).Visible = False
-            imgPKMN1HPbarYellow(i).Visible = True
-            imgPKMN1HPbarRed(i).Visible = False
+        imgPKMN1HPbarGrey(I).Visible = True
+        If imgPKMN1HPbarGREEN(I).Width <= (num / 4) Then
+            imgPKMN1HPbarGREEN(I).Visible = False
+            imgPKMN1HPbarYellow(I).Visible = False
+            imgPKMN1HPbarRed(I).Visible = True
         Else
-            imgPKMN1HPbarGREEN(i).Visible = True
-            imgPKMN1HPbarYellow(i).Visible = False
-            imgPKMN1HPbarRed(i).Visible = False
+            If imgPKMN1HPbarGREEN(I).Width <= (num / 2) Then
+                imgPKMN1HPbarGREEN(I).Visible = False
+                imgPKMN1HPbarYellow(I).Visible = True
+                imgPKMN1HPbarRed(I).Visible = False
+            Else
+                imgPKMN1HPbarGREEN(I).Visible = True
+                imgPKMN1HPbarYellow(I).Visible = False
+                imgPKMN1HPbarRed(I).Visible = False
+            End If
         End If
     End If
     Next
+End Sub
+
+Private Sub visbleState(ByVal tf As Boolean, ByVal I As Integer)
+    imgPKMN1HPbarFrame(I).Visible = tf
+    imgPKMN1Sprite(I).Visible = tf
+    imgPKMN1BARexpFRAME(I).Visible = tf
+    imgPKMN1EXPbarBlue(I).Visible = tf
+    imgPKMN1EXPbarBACK(I).Visible = tf
+    lblPKMN1LVLLabel(I).Visible = tf
+    lblPKMN1LVL(I).Visible = tf
+    imgPKMNStatus(I).Visible = tf
 End Sub
