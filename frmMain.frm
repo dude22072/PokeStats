@@ -1063,6 +1063,9 @@ Private Sub timFileReader_Timer()
     Dim lines() As String
     Dim I As Integer
     lines = Split(LoadFile(CommonDialog1.FileName), vbCrLf)
+    If UBound(lines) < 1 Then
+        GoTo Abort
+    End If
     For I = 0 To 5
     'Pokemon i
     If pkmnCur(I) <> lines(0 + (9 * I)) Then
@@ -1104,7 +1107,8 @@ Private Sub timFileReader_Timer()
         If pkmnCurHP(I) > 0 Then
             If pkmnStatus(I) <> lines(5 + (9 * I)) Then
                 pkmnStatus(I) = lines(5 + (9 * I))
-                Select Case pkmnStatus(I)
+            End If
+            Select Case pkmnStatus(I)
                 Case 3
                     imgPKMNStatus(I).Picture = LoadPicture(App.Path & "\status\" & "SLP" & ".gif")
                 Case 4
@@ -1118,12 +1122,12 @@ Private Sub timFileReader_Timer()
                 Case Else
                     imgPKMNStatus(I).Picture = LoadPicture(App.Path & "\status\NIL.gif")
                 End Select
-            End If
         Else
             imgPKMNStatus(I).Picture = LoadPicture(App.Path & "\status\" & "FNT" & ".gif")
         End If
     End If
     Next
+Abort:
 End Sub
 
 Public Function LoadFile(dFile As String) As String
