@@ -1057,12 +1057,19 @@ Private Sub Form_Load()
     For I = 0 To 5
         pkmnStatus(I) = 100
     Next
+
 End Sub
 
 Private Sub timFileReader_Timer()
+    On Error GoTo timer_error
     Dim lines() As String
     Dim I As Integer
     lines = Split(LoadFile(CommonDialog1.FileName), vbCrLf)
+    
+    If UBound(lines) < 1 Then
+        GoTo abort
+    End If
+    
     For I = 0 To 5
     'Pokemon i
     If pkmnCur(I) <> lines(0 + (9 * I)) Then
@@ -1088,7 +1095,13 @@ Private Sub timFileReader_Timer()
         lblPKMN1LVL(I).Caption = lines(4 + (9 * I))
         pkmnCurHP(I) = lines(2 + (9 * I))
         pkmnMaxHP(I) = lines(3 + (9 * I))
-        buffer = ((pkmnCurHP(I) / pkmnMaxHP(I)) * 100) * 7.35
+        
+        If pkmnMaxHP(I) = 0 Then
+            MsgBox "The problem was a 0 value of 'pkmnMaxHP' around line 60 in frmMain main timer"
+            GoTo abort ' let's get the hell out of here
+        End If
+        
+        buffer = ((pkmnCurHP(I) / pkmnMaxHP(I)) * 100) * 7.35 ' possible fault location
         If imgPKMN1HPbarGREEN(I).Width <> buffer Then
             imgPKMN1HPbarGREEN(I).Width = buffer
             imgPKMN1HPbarYellow(I).Width = buffer
@@ -1097,7 +1110,13 @@ Private Sub timFileReader_Timer()
         End If
         pkmnCurEXP(I) = lines(8 + (9 * I))
         pkmnMaxEXP(I) = expNeeded((lines(4 + (9 * I)) + 1), getExpGroup(lines(0 + (9 * I))))
-        buffer = ((pkmnCurEXP(I) / pkmnMaxEXP(I)) * 100) * 7.2
+        
+        If pkmnMaxHP(I) = 0 Then
+            MsgBox "The problem was a 0 value of 'pkmnMaxEXP' around line 70 in frmMain main timer"
+            GoTo abort ' let's get the hell out of here
+        End If
+        
+        buffer = ((pkmnCurEXP(I) / pkmnMaxEXP(I)) * 100) * 7.2 ' possible fault location
         If imgPKMN1EXPbarBlue(I).Width <> buffer Then
             imgPKMN1EXPbarBlue(I).Width = buffer
         End If
@@ -1124,6 +1143,13 @@ Private Sub timFileReader_Timer()
         End If
     End If
     Next
+timer_error:
+
+  If Err.Number > 0 Then
+     MsgBox "Error " & Err.Number & " (" & Err.Description & ") in line " & Erl & _
+            ", in main timer tick!"
+  End If
+abort:
 End Sub
 
 Public Function LoadFile(dFile As String) As String
