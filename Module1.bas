@@ -1,7 +1,8 @@
 Attribute VB_Name = "Module1"
-Public Sub Main()
-    If CheckPath(App.Path & "\pokestats.txt") Then
-        frmMain.CommonDialog1.FileName = (App.Path & "\pokestats.txt")
+Public Sub Main() 'derptest!
+    
+    If CheckPath("Z:\pokestats.txt") Then
+        frmMain.CommonDialog1.FileName = ("Z:\pokestats.txt")
         Debug.Print (frmMain.CommonDialog1.FileName)
     Else
         On Error GoTo errorHandler
@@ -295,7 +296,7 @@ Public Function getExpGroup(ByVal species As String) As Long
         getExpGroup = 1
     Case "Tauros"
         getExpGroup = 1
-    Case "Magikarp"
+    Case "Magikrap"
         getExpGroup = 1
     Case "Gyarados"
         getExpGroup = 1
