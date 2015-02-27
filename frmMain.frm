@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
+Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "comdlg32.ocx"
 Begin VB.Form frmMain 
    AutoRedraw      =   -1  'True
    BackColor       =   &H00FFFFFF&
@@ -1123,7 +1123,9 @@ Private Sub timFileReader_Timer()
         If pkmnCurHP(I) > 0 Then
             If pkmnStatus(I) <> lines(5 + (9 * I)) Then
                 pkmnStatus(I) = lines(5 + (9 * I))
-                Select Case pkmnStatus(I)
+            End If
+                
+            Select Case pkmnStatus(I)
                 Case 3
                     imgPKMNStatus(I).Picture = LoadPicture(App.Path & "\status\" & "SLP" & ".gif")
                 Case 4
@@ -1136,8 +1138,8 @@ Private Sub timFileReader_Timer()
                     imgPKMNStatus(I).Picture = LoadPicture(App.Path & "\status\" & "PAR" & ".gif")
                 Case Else
                     imgPKMNStatus(I).Picture = LoadPicture(App.Path & "\status\NIL.gif")
-                End Select
-            End If
+            End Select
+            
         Else
             imgPKMNStatus(I).Picture = LoadPicture(App.Path & "\status\" & "FNT" & ".gif")
         End If
