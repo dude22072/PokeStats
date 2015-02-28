@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "comdlg32.ocx"
+Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
 Begin VB.Form frmMain 
    AutoRedraw      =   -1  'True
    BackColor       =   &H00FFFFFF&
@@ -1042,6 +1042,7 @@ Dim pkmnCurHP(5) As Long
 Dim pkmnMaxHP(5) As Long
 Dim pkmnCurEXP(5) As Long
 Dim pkmnMaxEXP(5) As Long
+Dim pkmnEXPDif(5) As Long
 Dim pkmnStatus(5) As Long
 Dim buffer As Long
 
@@ -1108,10 +1109,12 @@ Private Sub timFileReader_Timer()
             imgPKMN1HPbarRed(I).Width = buffer
             imgPKMN1HPbarGrey(I).Width = 735
         End If
-        pkmnCurEXP(I) = lines(8 + (9 * I))
-        pkmnMaxEXP(I) = expNeeded((lines(4 + (9 * I)) + 1), getExpGroup(lines(0 + (9 * I))))
         
-        If pkmnMaxHP(I) = 0 Then
+        pkmnEXPDif(I) = expNeeded((lines(4 + (9 * I))), getExpGroup(lines(0 + (9 * I))))
+        pkmnCurEXP(I) = (lines(8 + (9 * I))) - pkmnEXPDif(I)
+        pkmnMaxEXP(I) = (expNeeded((lines(4 + (9 * I)) + 1), getExpGroup(lines(0 + (9 * I))))) - pkmnEXPDif(I)
+        
+        If pkmnMaxEXP(I) = 0 Then
             MsgBox "The problem was a 0 value of 'pkmnMaxEXP' around line 70 in frmMain main timer"
             GoTo abort ' let's get the hell out of here
         End If
