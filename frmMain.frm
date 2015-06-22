@@ -1331,9 +1331,9 @@ Private Sub barSizeFix()
     imgPKMN1HPbarYellow(I).Height = 70
     imgPKMN1HPbarRed(I).Height = 70
     imgPKMN1HPbarGrey(I).Height = 70
-    imgPKMN1BARexpFRAME(I).Top = 1190
-    imgPKMN1EXPbarBlue(I).Top = 1205
-    imgPKMN1EXPbarBACK(I).Top = 1205
+    imgPKMN1BARexpFRAME(I).Top = 1175
+    imgPKMN1EXPbarBlue(I).Top = 1190
+    imgPKMN1EXPbarBACK(I).Top = 1190
     imgPKMN1BARexpFRAME(I).Height = 95
     imgPKMN1EXPbarBlue(I).Height = 65
     imgPKMN1EXPbarBACK(I).Height = 65
