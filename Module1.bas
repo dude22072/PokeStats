@@ -30,7 +30,7 @@ Public Function expNeeded(ByVal currentLevel As Long, ByVal expGroup As Long) As
     Case 1
         expNeeded = ((5 * (curLevel ^ 3)) / 4)
     Case 2
-        expNeeded = 1.2 * curLevel ^ 3 - 15 * curLevel ^ 2 + 100 * curLevel - 140
+        expNeeded = (1.2 * (curLevel ^ 3)) - (15 * (curLevel ^ 2)) + (100 * curLevel) - 140
     Case 3
         expNeeded = (curLevel ^ 3)
     Case 4
@@ -344,9 +344,6 @@ Public Function getExpGroup(ByVal species As String) As Long
         getExpGroup = 1
     Case "Mew"
         getExpGroup = 2
-        
-        
-    'TODO: Anything below here
     Case "Chikorita"
         getExpGroup = 2
     Case "Bayleef"

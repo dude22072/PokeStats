@@ -964,6 +964,7 @@ Begin VB.Form frmMain
          Index           =   0
          Left            =   0
          Picture         =   "frmMain.frx":EE49
+         Stretch         =   -1  'True
          Top             =   1050
          Width           =   1080
       End
@@ -1156,7 +1157,7 @@ Private Sub Form_Load()
     For I = 0 To 5
         pkmnStatus(I) = 100
     Next
-
+    barSizeFix
 End Sub
 
 Private Sub timFileReader_Timer()
@@ -1175,7 +1176,6 @@ Private Sub timFileReader_Timer()
         imgPKMN1Sprite(I).Picture = LoadPicture(App.Path & "\sprites\" & lines(0 + (9 * I)) & ".gif")
         pkmnCur(I) = lines(0 + (9 * I))
     End If
-    Debug.Print (pkmnCur(I))
     If pkmnCur(I) = "None" Then
         imgPKMN1HPbarGREEN(I).Width = 0
         imgPKMN1HPbarYellow(I).Width = 0
@@ -1320,4 +1320,21 @@ Private Sub visbleState(ByVal tf As Boolean, ByVal I As Integer)
     imgPKMNStatus(I).Visible = tf
     imgPKMNStatusPKRS(I).Visible = tf
     imgPKMNStatusItem(I).Visible = tf
+End Sub
+
+'Because I'm not changing 40 damned images so that "The bar is a little more visible"
+Private Sub barSizeFix()
+    For I = 0 To 5
+    imgPKMN1HPbarFrame(I).Height = 140
+    imgPKMN1HPbarGREEN(I).Height = 70
+    imgPKMN1HPbarYellow(I).Height = 70
+    imgPKMN1HPbarRed(I).Height = 70
+    imgPKMN1HPbarGrey(I).Height = 70
+    imgPKMN1BARexpFRAME(I).Top = 1180
+    imgPKMN1EXPbarBlue(I).Top = 1195
+    imgPKMN1EXPbarBACK(I).Top = 1195
+    imgPKMN1BARexpFRAME(I).Height = 95
+    imgPKMN1EXPbarBlue(I).Height = 65
+    imgPKMN1EXPbarBACK(I).Height = 65
+    Next
 End Sub
