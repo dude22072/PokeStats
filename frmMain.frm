@@ -24,11 +24,27 @@ Begin VB.Form frmMain
       TabIndex        =   20
       Top             =   0
       Width           =   1875
+      Begin VB.Image imgPKMNStatusItem 
+         Height          =   120
+         Index           =   5
+         Left            =   960
+         Picture         =   "frmMain.frx":0000
+         Top             =   960
+         Width           =   120
+      End
+      Begin VB.Image imgPKMNStatusPKRS 
+         Height          =   120
+         Index           =   5
+         Left            =   1080
+         Picture         =   "frmMain.frx":035A
+         Top             =   720
+         Width           =   330
+      End
       Begin VB.Image imgPKMNStatus 
          Height          =   120
          Index           =   5
          Left            =   1080
-         Picture         =   "frmMain.frx":0000
+         Picture         =   "frmMain.frx":06C5
          Top             =   600
          Width           =   300
       End
@@ -36,7 +52,7 @@ Begin VB.Form frmMain
          Height          =   75
          Index           =   5
          Left            =   0
-         Picture         =   "frmMain.frx":0368
+         Picture         =   "frmMain.frx":0A2D
          Top             =   1160
          Width           =   975
       End
@@ -44,7 +60,7 @@ Begin VB.Form frmMain
          Height          =   120
          Index           =   5
          Left            =   0
-         Picture         =   "frmMain.frx":06DE
+         Picture         =   "frmMain.frx":0DA3
          Top             =   1050
          Width           =   1080
       End
@@ -80,7 +96,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   5
          Left            =   240
-         Picture         =   "frmMain.frx":0A8B
+         Picture         =   "frmMain.frx":1150
          Top             =   1080
          Width           =   1575
       End
@@ -88,7 +104,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   5
          Left            =   240
-         Picture         =   "frmMain.frx":0DDB
+         Picture         =   "frmMain.frx":14A0
          Top             =   1080
          Width           =   1575
       End
@@ -96,7 +112,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   5
          Left            =   240
-         Picture         =   "frmMain.frx":112B
+         Picture         =   "frmMain.frx":17F0
          Top             =   1080
          Width           =   1575
       End
@@ -104,7 +120,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   5
          Left            =   240
-         Picture         =   "frmMain.frx":147B
+         Picture         =   "frmMain.frx":1B40
          Top             =   1175
          Width           =   720
       End
@@ -154,7 +170,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   5
          Left            =   240
-         Picture         =   "frmMain.frx":17C0
+         Picture         =   "frmMain.frx":1E85
          Top             =   1080
          Width           =   1575
       End
@@ -162,7 +178,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   5
          Left            =   240
-         Picture         =   "frmMain.frx":1B10
+         Picture         =   "frmMain.frx":21D5
          Top             =   1175
          Width           =   720
       End
@@ -170,7 +186,7 @@ Begin VB.Form frmMain
          Height          =   960
          Index           =   5
          Left            =   0
-         Picture         =   "frmMain.frx":1E54
+         Picture         =   "frmMain.frx":2519
          Stretch         =   -1  'True
          Top             =   120
          Width           =   960
@@ -183,11 +199,27 @@ Begin VB.Form frmMain
       TabIndex        =   16
       Top             =   0
       Width           =   1875
+      Begin VB.Image imgPKMNStatusItem 
+         Height          =   120
+         Index           =   4
+         Left            =   960
+         Picture         =   "frmMain.frx":2CEE
+         Top             =   960
+         Width           =   120
+      End
+      Begin VB.Image imgPKMNStatusPKRS 
+         Height          =   120
+         Index           =   4
+         Left            =   1080
+         Picture         =   "frmMain.frx":3048
+         Top             =   720
+         Width           =   330
+      End
       Begin VB.Image imgPKMNStatus 
          Height          =   120
          Index           =   4
          Left            =   1080
-         Picture         =   "frmMain.frx":2629
+         Picture         =   "frmMain.frx":33B3
          Top             =   600
          Width           =   300
       End
@@ -195,7 +227,7 @@ Begin VB.Form frmMain
          Height          =   75
          Index           =   4
          Left            =   0
-         Picture         =   "frmMain.frx":2991
+         Picture         =   "frmMain.frx":371B
          Top             =   1160
          Width           =   975
       End
@@ -203,7 +235,7 @@ Begin VB.Form frmMain
          Height          =   120
          Index           =   4
          Left            =   0
-         Picture         =   "frmMain.frx":2D07
+         Picture         =   "frmMain.frx":3A91
          Top             =   1050
          Width           =   1080
       End
@@ -253,7 +285,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   4
          Left            =   240
-         Picture         =   "frmMain.frx":30B4
+         Picture         =   "frmMain.frx":3E3E
          Top             =   1175
          Width           =   720
       End
@@ -261,7 +293,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   4
          Left            =   240
-         Picture         =   "frmMain.frx":33F9
+         Picture         =   "frmMain.frx":4183
          Top             =   1080
          Width           =   1575
       End
@@ -269,7 +301,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   4
          Left            =   240
-         Picture         =   "frmMain.frx":3749
+         Picture         =   "frmMain.frx":44D3
          Top             =   1080
          Width           =   1575
       End
@@ -277,7 +309,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   4
          Left            =   240
-         Picture         =   "frmMain.frx":3A99
+         Picture         =   "frmMain.frx":4823
          Top             =   1080
          Width           =   1575
       End
@@ -313,7 +345,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   4
          Left            =   240
-         Picture         =   "frmMain.frx":3DE9
+         Picture         =   "frmMain.frx":4B73
          Top             =   1080
          Width           =   1575
       End
@@ -321,7 +353,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   4
          Left            =   240
-         Picture         =   "frmMain.frx":4139
+         Picture         =   "frmMain.frx":4EC3
          Top             =   1175
          Width           =   720
       End
@@ -329,7 +361,7 @@ Begin VB.Form frmMain
          Height          =   960
          Index           =   4
          Left            =   0
-         Picture         =   "frmMain.frx":447D
+         Picture         =   "frmMain.frx":5207
          Stretch         =   -1  'True
          Top             =   120
          Width           =   960
@@ -342,11 +374,27 @@ Begin VB.Form frmMain
       TabIndex        =   12
       Top             =   0
       Width           =   1875
+      Begin VB.Image imgPKMNStatusItem 
+         Height          =   120
+         Index           =   3
+         Left            =   960
+         Picture         =   "frmMain.frx":59DC
+         Top             =   960
+         Width           =   120
+      End
+      Begin VB.Image imgPKMNStatusPKRS 
+         Height          =   120
+         Index           =   3
+         Left            =   1080
+         Picture         =   "frmMain.frx":5D36
+         Top             =   720
+         Width           =   330
+      End
       Begin VB.Image imgPKMNStatus 
          Height          =   120
          Index           =   3
          Left            =   1080
-         Picture         =   "frmMain.frx":4C52
+         Picture         =   "frmMain.frx":60A1
          Top             =   600
          Width           =   300
       End
@@ -354,7 +402,7 @@ Begin VB.Form frmMain
          Height          =   75
          Index           =   3
          Left            =   0
-         Picture         =   "frmMain.frx":4FBA
+         Picture         =   "frmMain.frx":6409
          Top             =   1160
          Width           =   975
       End
@@ -362,7 +410,7 @@ Begin VB.Form frmMain
          Height          =   120
          Index           =   3
          Left            =   0
-         Picture         =   "frmMain.frx":5330
+         Picture         =   "frmMain.frx":677F
          Top             =   1050
          Width           =   1080
       End
@@ -398,7 +446,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   3
          Left            =   240
-         Picture         =   "frmMain.frx":56DD
+         Picture         =   "frmMain.frx":6B2C
          Top             =   1080
          Width           =   1575
       End
@@ -406,7 +454,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   3
          Left            =   240
-         Picture         =   "frmMain.frx":5A2D
+         Picture         =   "frmMain.frx":6E7C
          Top             =   1080
          Width           =   1575
       End
@@ -414,7 +462,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   3
          Left            =   240
-         Picture         =   "frmMain.frx":5D7D
+         Picture         =   "frmMain.frx":71CC
          Top             =   1080
          Width           =   1575
       End
@@ -422,7 +470,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   3
          Left            =   240
-         Picture         =   "frmMain.frx":60CD
+         Picture         =   "frmMain.frx":751C
          Top             =   1175
          Width           =   720
       End
@@ -472,7 +520,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   3
          Left            =   240
-         Picture         =   "frmMain.frx":6412
+         Picture         =   "frmMain.frx":7861
          Top             =   1175
          Width           =   720
       End
@@ -480,7 +528,7 @@ Begin VB.Form frmMain
          Height          =   960
          Index           =   3
          Left            =   0
-         Picture         =   "frmMain.frx":6756
+         Picture         =   "frmMain.frx":7BA5
          Stretch         =   -1  'True
          Top             =   120
          Width           =   960
@@ -489,7 +537,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   3
          Left            =   240
-         Picture         =   "frmMain.frx":6F2B
+         Picture         =   "frmMain.frx":837A
          Top             =   1080
          Width           =   1575
       End
@@ -501,11 +549,27 @@ Begin VB.Form frmMain
       TabIndex        =   8
       Top             =   0
       Width           =   1875
+      Begin VB.Image imgPKMNStatusItem 
+         Height          =   120
+         Index           =   2
+         Left            =   960
+         Picture         =   "frmMain.frx":86CA
+         Top             =   960
+         Width           =   120
+      End
+      Begin VB.Image imgPKMNStatusPKRS 
+         Height          =   120
+         Index           =   2
+         Left            =   1080
+         Picture         =   "frmMain.frx":8A24
+         Top             =   720
+         Width           =   330
+      End
       Begin VB.Image imgPKMNStatus 
          Height          =   120
          Index           =   2
          Left            =   1080
-         Picture         =   "frmMain.frx":727B
+         Picture         =   "frmMain.frx":8D8F
          Top             =   600
          Width           =   300
       End
@@ -513,7 +577,7 @@ Begin VB.Form frmMain
          Height          =   75
          Index           =   2
          Left            =   0
-         Picture         =   "frmMain.frx":75E3
+         Picture         =   "frmMain.frx":90F7
          Top             =   1160
          Width           =   975
       End
@@ -521,7 +585,7 @@ Begin VB.Form frmMain
          Height          =   120
          Index           =   2
          Left            =   0
-         Picture         =   "frmMain.frx":7959
+         Picture         =   "frmMain.frx":946D
          Top             =   1050
          Width           =   1080
       End
@@ -571,7 +635,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   2
          Left            =   240
-         Picture         =   "frmMain.frx":7D06
+         Picture         =   "frmMain.frx":981A
          Top             =   1175
          Width           =   720
       End
@@ -579,7 +643,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   2
          Left            =   240
-         Picture         =   "frmMain.frx":804B
+         Picture         =   "frmMain.frx":9B5F
          Top             =   1080
          Width           =   1575
       End
@@ -587,7 +651,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   2
          Left            =   240
-         Picture         =   "frmMain.frx":839B
+         Picture         =   "frmMain.frx":9EAF
          Top             =   1080
          Width           =   1575
       End
@@ -595,7 +659,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   2
          Left            =   240
-         Picture         =   "frmMain.frx":86EB
+         Picture         =   "frmMain.frx":A1FF
          Top             =   1080
          Width           =   1575
       End
@@ -631,7 +695,7 @@ Begin VB.Form frmMain
          Height          =   960
          Index           =   2
          Left            =   0
-         Picture         =   "frmMain.frx":8A3B
+         Picture         =   "frmMain.frx":A54F
          Stretch         =   -1  'True
          Top             =   120
          Width           =   960
@@ -640,7 +704,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   2
          Left            =   240
-         Picture         =   "frmMain.frx":9210
+         Picture         =   "frmMain.frx":AD24
          Top             =   1080
          Width           =   1575
       End
@@ -648,7 +712,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   2
          Left            =   240
-         Picture         =   "frmMain.frx":9560
+         Picture         =   "frmMain.frx":B074
          Top             =   1175
          Width           =   720
       End
@@ -660,11 +724,27 @@ Begin VB.Form frmMain
       TabIndex        =   4
       Top             =   0
       Width           =   1875
+      Begin VB.Image imgPKMNStatusItem 
+         Height          =   120
+         Index           =   1
+         Left            =   960
+         Picture         =   "frmMain.frx":B3B8
+         Top             =   960
+         Width           =   120
+      End
+      Begin VB.Image imgPKMNStatusPKRS 
+         Height          =   120
+         Index           =   1
+         Left            =   1080
+         Picture         =   "frmMain.frx":B712
+         Top             =   720
+         Width           =   330
+      End
       Begin VB.Image imgPKMNStatus 
          Height          =   120
          Index           =   1
          Left            =   1080
-         Picture         =   "frmMain.frx":98A4
+         Picture         =   "frmMain.frx":BA7D
          Top             =   600
          Width           =   300
       End
@@ -672,7 +752,7 @@ Begin VB.Form frmMain
          Height          =   75
          Index           =   1
          Left            =   0
-         Picture         =   "frmMain.frx":9C0C
+         Picture         =   "frmMain.frx":BDE5
          Top             =   1160
          Width           =   975
       End
@@ -680,7 +760,7 @@ Begin VB.Form frmMain
          Height          =   120
          Index           =   1
          Left            =   0
-         Picture         =   "frmMain.frx":9F82
+         Picture         =   "frmMain.frx":C15B
          Top             =   1050
          Width           =   1080
       End
@@ -716,7 +796,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   1
          Left            =   240
-         Picture         =   "frmMain.frx":A32F
+         Picture         =   "frmMain.frx":C508
          Top             =   1080
          Width           =   1575
       End
@@ -724,7 +804,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   1
          Left            =   240
-         Picture         =   "frmMain.frx":A67F
+         Picture         =   "frmMain.frx":C858
          Top             =   1080
          Width           =   1575
       End
@@ -732,7 +812,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   1
          Left            =   240
-         Picture         =   "frmMain.frx":A9CF
+         Picture         =   "frmMain.frx":CBA8
          Top             =   1080
          Width           =   1575
       End
@@ -740,7 +820,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   1
          Left            =   240
-         Picture         =   "frmMain.frx":AD1F
+         Picture         =   "frmMain.frx":CEF8
          Top             =   1175
          Width           =   720
       End
@@ -790,7 +870,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   1
          Left            =   240
-         Picture         =   "frmMain.frx":B064
+         Picture         =   "frmMain.frx":D23D
          Top             =   1080
          Width           =   1575
       End
@@ -798,7 +878,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   1
          Left            =   240
-         Picture         =   "frmMain.frx":B3B4
+         Picture         =   "frmMain.frx":D58D
          Top             =   1175
          Width           =   720
       End
@@ -806,7 +886,7 @@ Begin VB.Form frmMain
          Height          =   960
          Index           =   1
          Left            =   0
-         Picture         =   "frmMain.frx":B6F8
+         Picture         =   "frmMain.frx":D8D1
          Stretch         =   -1  'True
          Top             =   120
          Width           =   960
@@ -819,11 +899,27 @@ Begin VB.Form frmMain
       TabIndex        =   0
       Top             =   0
       Width           =   1875
+      Begin VB.Image imgPKMNStatusItem 
+         Height          =   120
+         Index           =   0
+         Left            =   960
+         Picture         =   "frmMain.frx":E0A6
+         Top             =   960
+         Width           =   120
+      End
+      Begin VB.Image imgPKMNStatusPKRS 
+         Height          =   120
+         Index           =   0
+         Left            =   1080
+         Picture         =   "frmMain.frx":E400
+         Top             =   720
+         Width           =   330
+      End
       Begin VB.Image imgPKMNStatus 
          Height          =   120
          Index           =   0
          Left            =   1080
-         Picture         =   "frmMain.frx":BECD
+         Picture         =   "frmMain.frx":E76B
          Top             =   600
          Width           =   300
       End
@@ -831,7 +927,7 @@ Begin VB.Form frmMain
          Height          =   75
          Index           =   0
          Left            =   0
-         Picture         =   "frmMain.frx":C235
+         Picture         =   "frmMain.frx":EAD3
          Top             =   1160
          Width           =   975
       End
@@ -867,7 +963,7 @@ Begin VB.Form frmMain
          Height          =   120
          Index           =   0
          Left            =   0
-         Picture         =   "frmMain.frx":C5AB
+         Picture         =   "frmMain.frx":EE49
          Top             =   1050
          Width           =   1080
       End
@@ -875,7 +971,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   0
          Left            =   240
-         Picture         =   "frmMain.frx":C958
+         Picture         =   "frmMain.frx":F1F6
          Top             =   1175
          Width           =   720
       End
@@ -925,7 +1021,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   0
          Left            =   240
-         Picture         =   "frmMain.frx":CC9D
+         Picture         =   "frmMain.frx":F53B
          Top             =   1080
          Width           =   1575
       End
@@ -933,7 +1029,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   0
          Left            =   240
-         Picture         =   "frmMain.frx":CFED
+         Picture         =   "frmMain.frx":F88B
          Top             =   1080
          Width           =   1575
       End
@@ -941,7 +1037,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   0
          Left            =   240
-         Picture         =   "frmMain.frx":D33D
+         Picture         =   "frmMain.frx":FBDB
          Top             =   1080
          Width           =   1575
       End
@@ -949,7 +1045,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   0
          Left            =   240
-         Picture         =   "frmMain.frx":D68D
+         Picture         =   "frmMain.frx":FF2B
          Top             =   1175
          Width           =   720
       End
@@ -957,7 +1053,7 @@ Begin VB.Form frmMain
          Height          =   960
          Index           =   0
          Left            =   0
-         Picture         =   "frmMain.frx":D9D1
+         Picture         =   "frmMain.frx":1026F
          Stretch         =   -1  'True
          Top             =   120
          Width           =   960
@@ -966,7 +1062,7 @@ Begin VB.Form frmMain
          Height          =   45
          Index           =   0
          Left            =   240
-         Picture         =   "frmMain.frx":E1A6
+         Picture         =   "frmMain.frx":10A44
          Top             =   1080
          Width           =   1575
       End
@@ -1044,6 +1140,8 @@ Dim pkmnCurEXP(5) As Long
 Dim pkmnMaxEXP(5) As Long
 Dim pkmnEXPDif(5) As Long
 Dim pkmnStatus(5) As Long
+Dim pkmnPKRS(5) As Long
+Dim pkmnHeldItem(5) As Long
 Dim buffer As Long
 
 Private Sub Form_Load()
@@ -1062,7 +1160,7 @@ Private Sub Form_Load()
 End Sub
 
 Private Sub timFileReader_Timer()
-    On Error GoTo timer_error
+    'On Error GoTo timer_error
     Dim lines() As String
     Dim I As Integer
     lines = Split(LoadFile(CommonDialog1.FileName), vbCrLf)
@@ -1103,7 +1201,7 @@ Private Sub timFileReader_Timer()
         End If
         
         buffer = ((pkmnCurHP(I) / pkmnMaxHP(I)) * 100) * 7.35 ' possible fault location
-        If imgPKMN1HPbarGREEN(I).Width <> buffer Then
+        If buffer > 0 And imgPKMN1HPbarGREEN(I).Width <> buffer Then
             imgPKMN1HPbarGREEN(I).Width = buffer
             imgPKMN1HPbarYellow(I).Width = buffer
             imgPKMN1HPbarRed(I).Width = buffer
@@ -1120,7 +1218,7 @@ Private Sub timFileReader_Timer()
         End If
         
         buffer = ((pkmnCurEXP(I) / pkmnMaxEXP(I)) * 100) * 7.2 ' possible fault location
-        If imgPKMN1EXPbarBlue(I).Width <> buffer Then
+        If buffer > 0 And imgPKMN1EXPbarBlue(I).Width <> buffer Then
             imgPKMN1EXPbarBlue(I).Width = buffer
         End If
         If pkmnCurHP(I) > 0 Then
@@ -1145,6 +1243,20 @@ Private Sub timFileReader_Timer()
             
         Else
             imgPKMNStatus(I).Picture = LoadPicture(App.Path & "\status\" & "FNT" & ".gif")
+        End If
+        
+        pkmnPKRS(I) = lines(6 + (9 * I))
+        If pkmnPKRS(I) <> 0 Then
+            imgPKMNStatusPKRS(I).Visible = True
+        Else
+            imgPKMNStatusPKRS(I).Visible = False
+        End If
+        
+        pkmnHeldItem(I) = lines(7 + (9 * I))
+        If pkmnHeldItem(I) <> 0 Then
+            imgPKMNStatusItem(I).Visible = True
+        Else
+            imgPKMNStatusItem(I).Visible = False
         End If
     End If
     Next
@@ -1206,4 +1318,6 @@ Private Sub visbleState(ByVal tf As Boolean, ByVal I As Integer)
     lblPKMN1LVLLabel(I).Visible = tf
     lblPKMN1LVL(I).Visible = tf
     imgPKMNStatus(I).Visible = tf
+    imgPKMNStatusPKRS(I).Visible = tf
+    imgPKMNStatusItem(I).Visible = tf
 End Sub

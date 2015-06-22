@@ -23,12 +23,14 @@ errorHandler:
     Exit Sub
 End Sub
 
-Public Function expNeeded(ByVal curLevel As Long, ByVal expGroup As Long) As Long
+Public Function expNeeded(ByVal currentLevel As Long, ByVal expGroup As Long) As Long
+    Dim curLevel As Double
+    curLevel = CDbl(currentLevel)
     Select Case expGroup 'Slow, Medium Slow, Medium Fast, Fast
     Case 1
         expNeeded = ((5 * (curLevel ^ 3)) / 4)
     Case 2
-        expNeeded = (1.2 * (curLevel ^ 3)) - (15 * (curLevel ^ 2)) + (100 * curLevel) - 140
+        expNeeded = 1.2 * curLevel ^ 3 - 15 * curLevel ^ 2 + 100 * curLevel - 140
     Case 3
         expNeeded = (curLevel ^ 3)
     Case 4
@@ -341,6 +343,209 @@ Public Function getExpGroup(ByVal species As String) As Long
     Case "Mewtwo"
         getExpGroup = 1
     Case "Mew"
+        getExpGroup = 2
+        
+        
+    'TODO: Anything below here
+    Case "Chikorita"
+        getExpGroup = 2
+    Case "Bayleef"
+        getExpGroup = 2
+    Case "Meganium"
+        getExpGroup = 2
+    Case "Cyndaquil"
+        getExpGroup = 2
+    Case "Quilava"
+        getExpGroup = 2
+    Case "Typhlosion"
+        getExpGroup = 2
+    Case "Totodile"
+        getExpGroup = 2
+    Case "Croconaw"
+        getExpGroup = 2
+    Case "Feraligatr"
+        getExpGroup = 2
+    Case "Sentret"
+        getExpGroup = 3
+    Case "Furret"
+        getExpGroup = 3
+    Case "Hoothoot"
+        getExpGroup = 3
+    Case "Noctowl"
+        getExpGroup = 3
+    Case "Ledyba"
+        getExpGroup = 4
+    Case "Ledian"
+        getExpGroup = 4
+    Case "Spinarak"
+        getExpGroup = 4
+    Case "Ariados"
+        getExpGroup = 4
+    Case "Crobat"
+        getExpGroup = 3
+    Case "Chinchou"
+        getExpGroup = 1
+    Case "Lanturn"
+        getExpGroup = 1
+    Case "Pichu"
+        getExpGroup = 3
+    Case "Cleffa"
+        getExpGroup = 4
+    Case "Igglybuff"
+        getExpGroup = 4
+    Case "Togepi"
+        getExpGroup = 4
+    Case "Togetic"
+        getExpGroup = 4
+    Case "Natu"
+        getExpGroup = 3
+    Case "Xatu"
+        getExpGroup = 3
+    Case "Mareep"
+        getExpGroup = 2
+    Case "Flaaffy"
+        getExpGroup = 2
+    Case "Ampharos"
+        getExpGroup = 2
+    Case "Bellossom"
+        getExpGroup = 2
+    Case "Marill"
+        getExpGroup = 4
+    Case "Azumarill"
+        getExpGroup = 4
+    Case "Sudowoodo"
+        getExpGroup = 3
+    Case "Politoed"
+        getExpGroup = 2
+    Case "Hoppip"
+        getExpGroup = 2
+    Case "Skiploom"
+        getExpGroup = 2
+    Case "Jumpluff"
+        getExpGroup = 2
+    Case "Aipom"
+        getExpGroup = 4
+    Case "Sunkern"
+        getExpGroup = 2
+    Case "Sunflora"
+        getExpGroup = 2
+    Case "Yanma"
+        getExpGroup = 3
+    Case "Wooper"
+        getExpGroup = 3
+    Case "Quagsire"
+        getExpGroup = 3
+    Case "Espeon"
+        getExpGroup = 3
+    Case "Umbreon"
+        getExpGroup = 3
+    Case "Murkrow"
+        getExpGroup = 2
+    Case "Slowking"
+        getExpGroup = 3
+    Case "Misdreavus"
+        getExpGroup = 4
+    Case "Unown"
+        getExpGroup = 3
+    Case "Wobbuffet"
+        getExpGroup = 3
+    Case "Girafarig"
+        getExpGroup = 3
+    Case "Pineco"
+        getExpGroup = 3
+    Case "Forretress"
+        getExpGroup = 3
+    Case "Dunsparce"
+        getExpGroup = 3
+    Case "Gligar"
+        getExpGroup = 2
+    Case "Steelix"
+        getExpGroup = 3
+    Case "Snubbull"
+        getExpGroup = 4
+    Case "Granbull"
+        getExpGroup = 4
+    Case "Qwilfish"
+        getExpGroup = 3
+    Case "Scizor"
+        getExpGroup = 3
+    Case "Shuckle"
+        getExpGroup = 2
+    Case "Heracross"
+        getExpGroup = 1
+    Case "Sneasel"
+        getExpGroup = 2
+    Case "Teddiursa"
+        getExpGroup = 3
+    Case "Ursaring"
+        getExpGroup = 3
+    Case "Slugma"
+        getExpGroup = 3
+    Case "Magcargo"
+        getExpGroup = 3
+    Case "Swinub"
+        getExpGroup = 1
+    Case "Piloswine"
+        getExpGroup = 1
+    Case "Corsola"
+        getExpGroup = 4
+    Case "Remoraid"
+        getExpGroup = 3
+    Case "Octillery"
+        getExpGroup = 3
+    Case "Delibird"
+        getExpGroup = 4
+    Case "Mantine"
+        getExpGroup = 1
+    Case "Skarmory"
+        getExpGroup = 1
+    Case "Houndour"
+        getExpGroup = 1
+    Case "Houndoom"
+        getExpGroup = 1
+    Case "Kingdra"
+        getExpGroup = 3
+    Case "Phanpy"
+        getExpGroup = 3
+    Case "Donphan"
+        getExpGroup = 3
+    Case "Porygon2"
+        getExpGroup = 3
+    Case "Stantler"
+        getExpGroup = 1
+    Case "Smeargle"
+        getExpGroup = 4
+    Case "Tyrogue"
+        getExpGroup = 3
+    Case "Hitmontop"
+        getExpGroup = 3
+    Case "Smoochum"
+        getExpGroup = 3
+    Case "Elekid"
+        getExpGroup = 3
+    Case "Magby"
+        getExpGroup = 3
+    Case "Miltank"
+        getExpGroup = 1
+    Case "Blissey"
+        getExpGroup = 4
+    Case "Raikou"
+        getExpGroup = 1
+    Case "Entei"
+        getExpGroup = 1
+    Case "Suicune"
+        getExpGroup = 1
+    Case "Larvitar"
+        getExpGroup = 1
+    Case "Pupitar"
+        getExpGroup = 1
+    Case "Tyranitar"
+        getExpGroup = 1
+    Case "Lugia"
+        getExpGroup = 1
+    Case "Ho-oh"
+        getExpGroup = 1
+    Case "Celebi"
         getExpGroup = 2
     Case Else
         getExpGroup = 0
