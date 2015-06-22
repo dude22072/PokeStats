@@ -964,7 +964,6 @@ Begin VB.Form frmMain
          Index           =   0
          Left            =   0
          Picture         =   "frmMain.frx":EE49
-         Stretch         =   -1  'True
          Top             =   1050
          Width           =   1080
       End
@@ -1158,6 +1157,8 @@ Private Sub Form_Load()
         pkmnStatus(I) = 100
     Next
     barSizeFix
+    barFix2
+    
 End Sub
 
 Private Sub timFileReader_Timer()
@@ -1330,11 +1331,28 @@ Private Sub barSizeFix()
     imgPKMN1HPbarYellow(I).Height = 70
     imgPKMN1HPbarRed(I).Height = 70
     imgPKMN1HPbarGrey(I).Height = 70
-    imgPKMN1BARexpFRAME(I).Top = 1180
-    imgPKMN1EXPbarBlue(I).Top = 1195
-    imgPKMN1EXPbarBACK(I).Top = 1195
+    imgPKMN1BARexpFRAME(I).Top = 1190
+    imgPKMN1EXPbarBlue(I).Top = 1205
+    imgPKMN1EXPbarBACK(I).Top = 1205
     imgPKMN1BARexpFRAME(I).Height = 95
     imgPKMN1EXPbarBlue(I).Height = 65
     imgPKMN1EXPbarBACK(I).Height = 65
+    imgPKMN1BARexpFRAME(I).Left = 10
+    imgPKMN1EXPbarBlue(I).Left = 250
+    imgPKMN1EXPbarBACK(I).Left = 250
+    Next
+End Sub
+
+'Because I'm lazy
+Private Sub barFix2()
+    For I = 0 To 5
+    imgPKMN1HPbarFrame(I).Picture = LoadPicture(App.Path & "\BarFix\BAR.gif")
+    imgPKMN1HPbarGREEN(I).Picture = LoadPicture(App.Path & "\BarFix\BARhpGREEN.gif")
+    imgPKMN1HPbarYellow(I).Picture = LoadPicture(App.Path & "\BarFix\BARhpYELLOW.gif")
+    imgPKMN1HPbarRed(I).Picture = LoadPicture(App.Path & "\BarFix\BARhpRED.gif")
+    imgPKMN1HPbarGrey(I).Picture = LoadPicture(App.Path & "\BarFix\BARhpGRAY.gif")
+    imgPKMN1BARexpFRAME(I).Picture = LoadPicture(App.Path & "\BarFix\BARexpFRAME.gif")
+    imgPKMN1EXPbarBlue(I).Picture = LoadPicture(App.Path & "\BarFix\BARexpBLUE.gif")
+    imgPKMN1EXPbarBACK(I).Picture = LoadPicture(App.Path & "\BarFix\BARexpBACK.gif")
     Next
 End Sub
