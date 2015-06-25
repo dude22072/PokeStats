@@ -3,9 +3,16 @@
 
 require "Pokestats_2_4_x_Gen4and5_Include"
 
-local textoutputpath = "D:\pokestats.txt"
-
+local textoutputpath = "pokestats.txt"  --Path + text file name, or just text file name to output to current directory
 local game = 1 -- 1 = Pearl, 2 = HeartGold, 3 = Platinum, 4 = Black, 5 = White, 6 = Black 2, 7 = White 2
+local displayKey = "U" --The key to toggle if the debug display is shown
+local displayScreenKey = "Y" --The key to change weather the debug screen is shown on the top or bottom screen
+local nextPokemonKey = "T" --Moves the debug screen to the next pokemon
+local previousPokemonKey="R" -- Moves the debug screen to the previous pokemon
+local textOutputKey="E" --Toggles text file output
+local debugscreenbool = true --Weather the debug screen should be show at startup or not
+local textoutputbool = true --Weather text output should be on at startup or not
+
 local gen
 local pointer
 local pidAddr
@@ -20,13 +27,6 @@ local submodemax = 6
 local tabl = {}
 local prev = {}
 local prng
-local debugscreenbool = 1
-local textoutputbool = 1
-local displayKey = "U"
-local displayScreenKey = "Y"
-local nextPokemonKey = "T"
-local previousPokemonKey="R"
-local textOutputKey="E"
 --BlockA
 local pokemonID = 0
 local heldItem = 0
@@ -297,10 +297,10 @@ function read_adressess()
 	for i = 1, BlockC[shiftvalue + 1] - 1 do
 		prng = mult32(prng,0x5F748241) + 0xCBA72510 -- 16 cycles
 	end
-    --No clue if any of block c works.
     prng = mult32(prng,0x41C64E6D) + 0x6073
     for i = 0, 11 do
         nickname[i+1] = bxr(memory.readword(pidAddr + BlockCoff + (i*2) + 8), gettop(prng))
+        prng = mult32(prng,0x41C64E6D) + 0x6073
     end
     
     -- Block D
@@ -345,8 +345,19 @@ function debugScreen()
 			display(0,25, "Pokemon: " .. pokemon[pokemonID + 1], "yellow")
 		end
         display(0,35,"Nickname: ", "yellow")
+        local stringTerminated = false
         for i = 1,12 do
-            display(50 + (i*5),35,poketext4[nickname[i]], "yellow")
+            if stringTerminated == false then
+                if nickname[i] ~= 0xffff then
+                     if gen == 4 then
+                                display(50 + (i*5),35,poketext4[nickname[i]], "yellow")
+                            else 
+                                display(55,35,pokemon[pokemonID + 1], "yellow") --Just the pokemon's species, because I dont have a gen 5 unicode table yet.
+                            end 
+                else
+                    stringTerminated = true
+                end
+            end
         end
         
 		display(0,45, "PID : " .. bit.tohex(pid), "magenta")
@@ -471,9 +482,20 @@ function do_pokestats()
                 submode = i
                 read_adressess()
                 file:write(pokemon[pokemonID + 1].."\n")
+                local stringTerminated = false
                 for i = 1,12 do
-                    --file:write(nickname[i].."\n")
-                    file:write(string.format("%x", nickname[i]).."\n")
+                    if stringTerminated == false then
+                        if nickname[i] ~= 0xffff then
+                            if gen == 4 then
+                                file:write(poketext4[nickname[i]])
+                            else 
+                                file:write(pokemon[pokemonID + 1]) --Just the pokemon's species, because I dont have a gen 5 unicode table yet.
+                            end 
+                        else
+                            stringTerminated = true
+                        end
+                    end
+                    
                 end
                 file:write("\n"..
                     hpstat.."\n"..

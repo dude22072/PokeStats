@@ -1,3 +1,6 @@
+--Written by Joseph Keller (dude22072) with help from f00barbob
+--Contains all Pokemon's index number and the gen4 unicode table.
+
 pokemon =  {"None", "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard",
 			"Squirtle", "Wartortle", "Blastoise", "Caterpie", "Metapod", "Butterfree",
 			"Weedle", "Kakuna", "Beedrill", "Pidgey", "Pidgeotto", "Pidgeot", "Rattata", "Raticate",
