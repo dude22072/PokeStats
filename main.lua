@@ -1,4 +1,3 @@
---TODO:Status, PKRS, Item, Other things
 local pokestatsTextFilePath = "D:/pokestats.txt"
 local file = nil
 local fileReader = {}
@@ -10,12 +9,26 @@ imgHPBarGrey = love.graphics.newImage('BarFix/BARhpGRAY.gif')
 imgHPBarRed = love.graphics.newImage('BarFix/BARhpRED.gif')
 imgHPBarYellow = love.graphics.newImage('BarFix/BARhpYELLOW.gif')
 imgHPBarGreen = love.graphics.newImage('BarFix/BARhpGREEN.gif')
+imgStatus = {}
+imgStatus.BRN = love.graphics.newImage('status/BRN.gif')
+imgStatus.FNT = love.graphics.newImage('status/FNT.gif')
+imgStatus.FRZ = love.graphics.newImage('status/FRZ.gif')
+imgStatus.ITEM = love.graphics.newImage('status/ITEM.gif')
+imgStatus.NIL = love.graphics.newImage('status/NIL.gif')
+imgStatus.PAR = love.graphics.newImage('status/PAR.gif')
+imgStatus.PKRS = love.graphics.newImage('status/PKRS.gif')
+imgStatus.PSN = love.graphics.newImage('status/PSN.gif')
+imgStatus.SLP = love.graphics.newImage('status/SLP.gif')
 pokemonIMG = {}
 pokemonNickname = {}
 pokemonHP = {}
 pokemonHPMax = {}
 pokemonLevel = {}
 pokemonStatus = {}
+local statusname={
+ "NIL",
+ "SLP","SLP","SLP","PSN","BRN",
+ "FRZ","PAR","PSN"}
 pokemonPKRS = {}
 pokemonItem = {}
 pokemonCurEXP = {}
@@ -24,7 +37,7 @@ pokemonEXPDif = {}
 hpQuads = {}
 hpGreyQuad = {}
 expQuads = {}
-local shifter = 115
+local shifter = 117
 
 
 -- Configuration
@@ -55,7 +68,7 @@ function love.update(dt)
     fileReader = mysplit(filecheck, "\n")
     
     for I=0,5 do
-        if fileReader[1+(I*9)] ~= "None" then
+        if fileReader[1+(I*9)] ~= "None" and fileReader[1+(I*9)] ~= "0" then
         pokemonIMG[I] = love.graphics.newImage('sprites/'..fileReader[1+(I*9)]..'.gif')
         pokemonNickname[I] = fileReader[2+(I*9)]
         pokemonHP[I] = fileReader[3+(I*9)]
@@ -84,19 +97,30 @@ function love.draw(dt)
             love.graphics.print(pokemonNickname[I], 70+(I*shifter), 0)
             love.graphics.print("Lvl: "..pokemonLevel[I], 70+(I*shifter), 15)
             
+            love.graphics.draw(imgStatus[statusname[pokemonStatus[I]+1]], 70+(I*shifter), 30)
+            
+            if pokemonPKRS[I] ~= nil and pokemonPKRS[I] ~= "0" then
+                love.graphics.draw(imgStatus.PKRS, 92+(I*shifter), 30)
+            end
+            
+            if pokemonItem[I] ~= nil and pokemonItem[I] ~= "0" then
+                love.graphics.draw(imgStatus.ITEM, 70+(I*shifter), 45)
+                --love.graphics.print(pokemonItem[I], 80+(I*shifter), 45)
+            end
+            
             --HP Bar
             hpGreyQuad[I] = love.graphics.newQuad(0, 0, 55, 4, imgHPBarGrey:getDimensions())
             love.graphics.draw(imgHPBarGrey, hpGreyQuad[I], 16+(I*shifter), 62)
             hpQuads[I] = love.graphics.newQuad(0, 0, map(pokemonHP[I], 0, pokemonHPMax[I], 0, 55), 4, imgHPBarGrey:getDimensions())
             if tonumber(pokemonHP[I]) <= (tonumber(pokemonHPMax[I])/4) then
-                love.graphics.draw(imgHPBarRed, hpQuads[I], 16+(I*shifter), 62)
+                love.graphics.draw(imgHPBarRed, hpQuads[I], 15+(I*shifter), 62)
             elseif tonumber(pokemonHP[I]) <= (tonumber(pokemonHPMax[I])/2) then
-                love.graphics.draw(imgHPBarYellow, hpQuads[I], 16+(I*shifter), 62)
+                love.graphics.draw(imgHPBarYellow, hpQuads[I], 15+(I*shifter), 62)
             else
-                love.graphics.draw(imgHPBarGreen, hpQuads[I], 16+(I*shifter), 62)
+                love.graphics.draw(imgHPBarGreen, hpQuads[I], 15+(I*shifter), 62)
             end
             
-            love.graphics.draw(imgHPBarFrame, 0+(I*shifter), 60)
+            love.graphics.draw(imgHPBarFrame, (0+(I*shifter))-1, 60)
             
             --EXP Bar
             love.graphics.draw(imgEXPBarBack, 16+(I*shifter), 71)
