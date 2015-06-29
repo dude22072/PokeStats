@@ -1,3 +1,5 @@
+require("AnAL")
+math.randomseed(os.time())
 local pokestatsTextFilePath = "D:/pokestats.txt"
 local file = nil
 local fileReader = {}
@@ -10,16 +12,23 @@ imgHPBarRed = love.graphics.newImage('BarFix/BARhpRED.gif')
 imgHPBarYellow = love.graphics.newImage('BarFix/BARhpYELLOW.gif')
 imgHPBarGreen = love.graphics.newImage('BarFix/BARhpGREEN.gif')
 imgStatus = {}
-imgStatus.BRN = love.graphics.newImage('status/BRN.gif')
-imgStatus.FNT = love.graphics.newImage('status/FNT.gif')
-imgStatus.FRZ = love.graphics.newImage('status/FRZ.gif')
-imgStatus.ITEM = love.graphics.newImage('status/ITEM.gif')
-imgStatus.NIL = love.graphics.newImage('status/NIL.gif')
-imgStatus.PAR = love.graphics.newImage('status/PAR.gif')
-imgStatus.PKRS = love.graphics.newImage('status/PKRS.gif')
-imgStatus.PSN = love.graphics.newImage('status/PSN.gif')
-imgStatus.SLP = love.graphics.newImage('status/SLP.gif')
+    imgStatus.BRN = love.graphics.newImage('status/BRN.gif')
+    imgStatus.FNT = love.graphics.newImage('status/FNT.gif')
+    imgStatus.FRZ = love.graphics.newImage('status/FRZ.gif')
+    imgStatus.ITEM = love.graphics.newImage('status/ITEM.gif')
+    imgStatus.PAR = love.graphics.newImage('status/PAR.gif')
+    imgStatus.PKRS = love.graphics.newImage('status/PKRS.gif')
+    imgStatus.PSN = love.graphics.newImage('status/PSN.gif')
+    imgStatus.SLP = love.graphics.newImage('status/SLP.gif')
+pokemon = {}
 pokemonIMG = {}
+pokemonIMGANI = {}
+pokemonAnimation = {}
+pokemonAnimationFrame = {}
+animatingSprite = {}
+for I=0,5 do
+    animatingSprite[I]=false
+end
 pokemonNickname = {}
 pokemonHP = {}
 pokemonHPMax = {}
@@ -39,25 +48,14 @@ hpGreyQuad = {}
 expQuads = {}
 local shifter = 117
 
-
--- Configuration
-function love.conf(t)
-	t.title = "PokeStats Display 3.0.0" -- The title of the window the game is in (string)
-	t.version = "0.9.2"        -- The LÖVE version this was made for
-	t.window.width = 722
-	t.window.height = 86
-
-	-- For Windows debugging
-	t.console = true
-end
-
 --Runs before anything else
 function love.load(arg)
     if CheckPath(pokestatsTextFilePath) == false then
-        print("ERROR:FILE NOT FOUND")
+        error("ERROR:FILE NOT FOUND")
     end
     --love.graphics.setNewFont("C:/Users/tammi/Documents/GitHub/PokeStats/pkmmfl.ttf", "9")
     love.graphics.setNewFont(9)
+    print(os.time().." Loaded")
 end
 
 --Called every frame
@@ -68,36 +66,63 @@ function love.update(dt)
     fileReader = mysplit(filecheck, "\n")
     
     for I=0,5 do
-        if fileReader[1+(I*9)] ~= "None" and fileReader[1+(I*9)] ~= "0" then
-        pokemonIMG[I] = love.graphics.newImage('sprites/'..fileReader[1+(I*9)]..'.gif')
-        pokemonNickname[I] = fileReader[2+(I*9)]
-        pokemonHP[I] = fileReader[3+(I*9)]
-        pokemonHPMax[I] = fileReader[4+(I*9)]
-        pokemonLevel[I] = fileReader[5+(I*9)]
-        pokemonStatus[I] = fileReader[6+(I*9)]
-        pokemonPKRS[I] = fileReader[7+(I*9)]
-        pokemonItem[I] = fileReader[8+(I*9)]
-        pokemonCurEXP[I] = fileReader[9+(I*9)]
-        
-        pokemonEXPDif[I] = expNeeded(pokemonLevel[I], getExpGroup(fileReader[1+(I*9)]))
-        pokemonCurEXP[I] = pokemonCurEXP[I] - pokemonEXPDif[I]
-        pokemonMaxEXP[I] = (expNeeded((pokemonLevel[I] + 1), getExpGroup(fileReader[1+(I*9)]))) - pokemonEXPDif[I]
+        pokemon[I] = fileReader[1+(I*9)]
+        if pokemon[I] ~= "None" and pokemon[I] ~= "0" then
+            pokemonIMG[I] = love.graphics.newImage('sprites/'..fileReader[1+(I*9)]..'.png')
+            if animatingSprite[I] == false then
+                pokemonIMGANI[I] = love.graphics.newImage('animations/'..pokemon[I]..'Ani.png')
+                pokemonAnimation[I] = newAnimation(pokemonIMGANI[I], 56, 56, 0.02, getFrames(pokemon[I]))
+                local rand = math.random(0,1000)
+                --print(I.."   "..rand)
+                if rand == 15 then
+                    print(os.time().." Animate "..I)
+                    animatingSprite[I] = true
+                    pokemonAnimationFrame[I] = 0
+                end
+            end
+            pokemonNickname[I] = fileReader[2+(I*9)]
+            pokemonHP[I] = fileReader[3+(I*9)]
+            pokemonHPMax[I] = fileReader[4+(I*9)]
+            pokemonLevel[I] = fileReader[5+(I*9)]
+            pokemonStatus[I] = fileReader[6+(I*9)]
+            pokemonPKRS[I] = fileReader[7+(I*9)]
+            pokemonItem[I] = fileReader[8+(I*9)]
+            pokemonCurEXP[I] = fileReader[9+(I*9)]
+            
+            pokemonEXPDif[I] = expNeeded(pokemonLevel[I], getExpGroup(pokemon[I]))
+            pokemonCurEXP[I] = pokemonCurEXP[I] - pokemonEXPDif[I]
+            pokemonMaxEXP[I] = (expNeeded((pokemonLevel[I] + 1), getExpGroup(pokemon[I]))) - pokemonEXPDif[I]
         else
         
         end
+        if animatingSprite[I] == true then
+            pokemonAnimation[I]:update(dt)
+            pokemonAnimationFrame[I] = pokemonAnimationFrame[I] + 1
+            if pokemonAnimationFrame[I] >= getFrames(pokemon[I]) then
+                animatingSprite[I] = false
+                pokemonAnimationFrame[I] = 0
+            end
+        end
     end
+   
 end
 
 --Called every frame
 function love.draw(dt)
     for I=0,5 do
-        if fileReader[1+(I*9)] ~= nil and fileReader[1+(I*9)] ~= "None" then
+        if pokemon[I] ~= nil and pokemon[I] ~= "None" then
             --Sprite and name and crap
-            love.graphics.draw(pokemonIMG[I], (I*shifter), 0)
+            if animatingSprite[I] == false then
+                love.graphics.draw(pokemonIMG[I], (I*shifter), 0)
+            else
+                pokemonAnimation[I]:draw((I*shifter), 0)
+            end
             love.graphics.print(pokemonNickname[I], 70+(I*shifter), 0)
             love.graphics.print("Lvl: "..pokemonLevel[I], 70+(I*shifter), 15)
             
-            love.graphics.draw(imgStatus[statusname[pokemonStatus[I]+1]], 70+(I*shifter), 30)
+            if pokemonStatus[I] ~= "0" then
+                love.graphics.draw(imgStatus[statusname[pokemonStatus[I]+1]], 70+(I*shifter), 30)
+            end
             
             if pokemonPKRS[I] ~= nil and pokemonPKRS[I] ~= "0" then
                 love.graphics.draw(imgStatus.PKRS, 92+(I*shifter), 30)
@@ -672,4 +697,24 @@ end
 
 function map(x,in_min,in_max,out_min,out_max)
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+end
+
+--Includes blank frames
+function getFramesArith(width,height)
+    local wide = width/56
+    local tall = height/56
+    return wide*tall
+end
+
+--The hard way
+function getFrames(pokemon)
+    if pokemon == "Slowbro" then
+        return 86
+    elseif pokemon == "Mewtwo" then
+        return 114
+    elseif pokemon == "Mew" then
+        return 201
+    else
+        return 0
+    end
 end
