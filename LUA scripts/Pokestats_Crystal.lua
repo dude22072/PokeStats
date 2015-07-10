@@ -186,6 +186,7 @@ team[3] = {}
 team[4] = {}
 team[5] = {}
 team[6] = {}
+team[7] = {} --In-Battle Pokemon
 team[1].start = 0xDCDF
 team[2].start=team[1].start+48
 team[3].start=team[1].start+96
@@ -198,8 +199,9 @@ team[3].startNick=0xDE57
 team[4].startNick=0xDE62
 team[5].startNick=0xDE6D
 team[6].startNick=0xDD78
+team[7].startNick=0xC621
 
-for i=1,6 do team[i].nickname = {} end
+for i=1,7 do team[i].nickname = {} end
 for i=1,6 do team[i].experience = {} end
 
 ---File Output
@@ -230,10 +232,6 @@ function do_pokestats()
 		end
 		
 		for i=1,6 do
-			--Species & Item
-			team[i].species=memory.readbyteunsigned(team[i].start)
-            team[i].item=memory.readbyteunsigned(team[i].start+0x01)
-				
             --Nickname
             stringTerminated = false 
             for j=1,10 do 
@@ -248,35 +246,50 @@ function do_pokestats()
                 end 
             end
             
+                --Species & Item
+                team[i].species=memory.readbyteunsigned(team[i].start)
+                team[i].item=memory.readbyteunsigned(team[i].start+0x01)
             
+                --Experience
+                team[i].experience[1]=memory.readbyteunsigned(team[i].start+0x08)
+                team[i].experience[2]=memory.readbyteunsigned(team[i].start+0x09)
+                team[i].experience[3]=memory.readbyteunsigned(team[i].start+0x0A)
+                if team[i].experience[1] < 0 then
+                    team[i].experience[1] = (team[i].experience[1]+256)%256
+                end 
+                if team[i].experience[2] < 0 then
+                    team[i].experience[2] = (team[i].experience[2]+256)%256
+                end 
+                if team[i].experience[3] < 0 then
+                    team[i].experience[3] = (team[i].experience[3]+256)%256
+                end 
+                team[i].experience[4]=((((math.abs(team[i].experience[1])*65536))+(math.abs(team[i].experience[2])*256))+(math.abs(team[i].experience[3])))
             
-            --Experience
-            team[i].experience[1]=memory.readbyteunsigned(team[i].start+0x08)
-            team[i].experience[2]=memory.readbyteunsigned(team[i].start+0x09)
-            team[i].experience[3]=memory.readbyteunsigned(team[i].start+0x0A)
-            if team[i].experience[1] < 0 then
-                team[i].experience[1] = (team[i].experience[1]+256)%256
-            end 
-            if team[i].experience[2] < 0 then
-                team[i].experience[2] = (team[i].experience[2]+256)%256
-            end 
-            if team[i].experience[3] < 0 then
-                team[i].experience[3] = (team[i].experience[3]+256)%256
-            end 
-            team[i].experience[4]=((((math.abs(team[i].experience[1])*65536))+(math.abs(team[i].experience[2])*256))+(math.abs(team[i].experience[3])))
-            
-			--level/hp/status
-			team[i].status=memory.readbyteunsigned(team[i].start+0x20)
-			team[i].level=memory.readbyteunsigned(team[i].start+0x1F)
-            team[i].pokerus=memory.readbyteunsigned(team[i].start+0x1C)
-            --Hp reader
-			team[i].curHPB1=memory.readbyteunsigned(team[i].start+0x22)
-            team[i].curHPB2=memory.readbyteunsigned(team[i].start+0x23)
-            team[i].currentHP=(team[i].curHPB1*255)+team[i].curHPB2
-            team[i].maxHPB1=memory.readbyteunsigned(team[i].start+0x24)
-            team[i].maxHPB2=memory.readbyteunsigned(team[i].start+0x25)
-            team[i].totalHP=(team[i].maxHPB1*255)+team[i].maxHPB2
+                --level/hp/status
+                team[i].status=memory.readbyteunsigned(team[i].start+0x20)
+                team[i].level=memory.readbyteunsigned(team[i].start+0x1F)
+                team[i].pokerus=memory.readbyteunsigned(team[i].start+0x1C)
+                --Hp reader
+                team[i].curHPB1=memory.readbyteunsigned(team[i].start+0x22)
+                team[i].curHPB2=memory.readbyteunsigned(team[i].start+0x23)
+                team[i].currentHP=(team[i].curHPB1*255)+team[i].curHPB2
+                team[i].maxHPB1=memory.readbyteunsigned(team[i].start+0x24)
+                team[i].maxHPB2=memory.readbyteunsigned(team[i].start+0x25)
+                team[i].totalHP=(team[i].maxHPB1*255)+team[i].maxHPB2
 		end
+        
+        
+        stringTerminated = false 
+            for j=1,10 do 
+                if stringTerminated then 
+                    team[7].nickname[j]=0x7F
+                else 
+                    team[7].nickname[j]=memory.readbyteunsigned(team[7].startNick-1+j)
+                    if team[7].nickname[j] == 0x50 then 
+                        stringTerminated = true 
+                    end 
+                end 
+            end
         
        
 		--File Output
@@ -287,38 +300,45 @@ function do_pokestats()
 			file=io.open(textoutputpath, "w")
 			
 			for i=1, 6 do
-        if i <= B(team_count) then
-          if team[i].species >= 0 and team[i].species <= 411 then
-            file:write(pokemonSpeciesNames[team[i].species+1].."\n")
-          end
-          for j=1,10 do
-            file:write(charMap[team[i].nickname[j]+1])
-          end
-          file:write("\n"..
-            team[i].currentHP.."\n"..
-            team[i].totalHP.."\n"..
-            team[i].level.."\n"..
-            team[i].status.."\n"..
-            team[i].pokerus.."\n"..
-            team[i].item.."\n"..
-                      team[i].experience[4].."\n")
-        else
-
-            file:write(pokemonSpeciesNames[1].."\n")
-
-          for j=1,10 do
-            file:write(charMap[10])
-          end
-          file:write("\n"..
-            "0" .."\n"..
-            "0" .."\n"..
-            "0" .."\n"..
-            "0" .."\n"..
-            "0".."\n"..
-            "0".."\n"..
-            "0".."\n")
-        end
+                if i <= B(team_count) then
+                    if team[i].species >= 0 and team[i].species <= 411 then
+                        file:write(pokemonSpeciesNames[team[i].species+1].."\n")
+                    end
+                    for j=1,10 do
+                        file:write(charMap[team[i].nickname[j]+1])
+                    end
+                    file:write("\n"..
+                        team[i].currentHP.."\n"..
+                        team[i].totalHP.."\n"..
+                        team[i].level.."\n"..
+                        team[i].status.."\n"..
+                        team[i].pokerus.."\n"..
+                        team[i].item.."\n"..
+                            team[i].experience[4].."\n")
+                else
+                    file:write(pokemonSpeciesNames[1].."\n")
+                    file:write("None")
+                    file:write("\n"..
+                        "0" .."\n"..
+                        "0" .."\n"..
+                        "0" .."\n"..
+                        "0" .."\n"..
+                        "0".."\n"..
+                        "0".."\n"..
+                            "0".."\n")
+                end
 			end
+            
+            file:write("POKESTATS 3.0.0 STUFF\n")
+            
+            if charMap[team[7].nickname[1]+1] == "" then
+                file:write("NOBATTLE")
+            else
+                for k=1,10 do
+                    file:write(charMap[team[7].nickname[k]+1])
+                end
+            end
+            
 			file:flush()
 		elseif filecheck==file then
 			file:flush()

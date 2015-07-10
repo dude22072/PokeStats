@@ -1,6 +1,8 @@
 require("AnAL")
 math.randomseed(os.time())
-local pokestatsTextFilePath = "D:/pokestats.txt"
+local pokestatsTextFilePath = "D:/pokestats.txt" --The location of the pokestats outputed text file
+local shifter = 117 --The space between the starting of the pokemon info panels
+---------------------------------------------------------------------------------------------------------------
 local file = nil
 local fileReader = {}
 imgEXPBarFrame = love.graphics.newImage('BarFix/BARexpFRAME.gif')
@@ -46,7 +48,10 @@ pokemonEXPDif = {}
 hpQuads = {}
 hpGreyQuad = {}
 expQuads = {}
-local shifter = 117
+animationStuff = {}
+animationStuff[1] = "Kappa" --Animation.pokemonToAnimate
+animationStuff[2] = false -- Animation.hasPokemonAnimated
+
 
 --Runs before anything else
 function love.load(arg)
@@ -62,56 +67,78 @@ end
 function love.update(dt)
     --print("hello World")
     file=io.open(pokestatsTextFilePath, "r")
-    local filecheck=file:read("*all")
-    fileReader = mysplit(filecheck, "\n")
+    if file~=nil then
+        local filecheck=file:read("*all")
+        fileReader = mysplit(filecheck, "\n")
     
-    for I=0,5 do
-        pokemon[I] = fileReader[1+(I*9)]
-        if pokemon[I] ~= "None" and pokemon[I] ~= "0" then
-            pokemonIMG[I] = love.graphics.newImage('sprites/'..fileReader[1+(I*9)]..'.png')
-            if animatingSprite[I] == false then
-                pokemonIMGANI[I] = love.graphics.newImage('animations/'..pokemon[I]..'Ani.png')
-                pokemonAnimation[I] = newAnimation(pokemonIMGANI[I], 56, 56, 0.02, getFrames(pokemon[I]))
-                local rand = math.random(0,1000)
-                --print(I.."   "..rand)
-                if rand == 15 then
-                    print(os.time().." Animate "..I)
-                    animatingSprite[I] = true
+        animationStuff[1] = fileReader[56]
+        if animationStuff[1] == "NOBATTLE" or animationStuff[1] ~= animationStuff[3] then
+            animationStuff[2] = false
+        end
+        
+        pokemon[0] = fileReader[1]
+        if pokemon[0] ~= "None" then
+    
+    
+        for I=0,5 do
+            pokemon[I] = fileReader[1+(I*9)]
+            if pokemon[I] ~= "None" and pokemon[I] ~= "0" and pokemon[I] ~= nil then
+                pokemonIMG[I] = love.graphics.newImage('sprites/'..pokemon[I]..'.png')
+                pokemonNickname[I] = fileReader[2+(I*9)]
+            
+                if pokemonNickname[I] == animationStuff[1] then
+                    if animationStuff[2] == false then
+                        pokemonIMGANI[I] = love.graphics.newImage('animations/'..pokemon[I]..'Ani.png')
+                        pokemonAnimation[I] = newAnimation(pokemonIMGANI[I], 56, 56, 0.02, getFrames(pokemon[I]))
+                        animatingSprite[I] = true
+                        pokemonAnimationFrame[I] = 0
+                        animationStuff[2] = true
+                        animationStuff[3] = animationStuff[1]
+                    end
+                end
+            
+                pokemonHP[I] = fileReader[3+(I*9)]
+                pokemonHPMax[I] = fileReader[4+(I*9)]
+                pokemonLevel[I] = fileReader[5+(I*9)]
+                pokemonStatus[I] = fileReader[6+(I*9)]
+                pokemonPKRS[I] = fileReader[7+(I*9)]
+                pokemonItem[I] = fileReader[8+(I*9)]
+                pokemonCurEXP[I] = fileReader[9+(I*9)]
+            
+                pokemonEXPDif[I] = expNeeded(pokemonLevel[I], getExpGroup(pokemon[I]))
+                pokemonCurEXP[I] = pokemonCurEXP[I] - pokemonEXPDif[I]
+                pokemonMaxEXP[I] = (expNeeded((pokemonLevel[I] + 1), getExpGroup(pokemon[I]))) - pokemonEXPDif[I]
+            else
+        
+            end
+            if animatingSprite[I] == true then
+                pokemonAnimation[I]:update(dt)
+                pokemonAnimationFrame[I] = pokemonAnimationFrame[I] + 1
+                if pokemonAnimationFrame[I] >= getFrames(pokemon[I]) then
+                    animatingSprite[I] = false
                     pokemonAnimationFrame[I] = 0
                 end
             end
-            pokemonNickname[I] = fileReader[2+(I*9)]
-            pokemonHP[I] = fileReader[3+(I*9)]
-            pokemonHPMax[I] = fileReader[4+(I*9)]
-            pokemonLevel[I] = fileReader[5+(I*9)]
-            pokemonStatus[I] = fileReader[6+(I*9)]
-            pokemonPKRS[I] = fileReader[7+(I*9)]
-            pokemonItem[I] = fileReader[8+(I*9)]
-            pokemonCurEXP[I] = fileReader[9+(I*9)]
-            
-            pokemonEXPDif[I] = expNeeded(pokemonLevel[I], getExpGroup(pokemon[I]))
-            pokemonCurEXP[I] = pokemonCurEXP[I] - pokemonEXPDif[I]
-            pokemonMaxEXP[I] = (expNeeded((pokemonLevel[I] + 1), getExpGroup(pokemon[I]))) - pokemonEXPDif[I]
-        else
-        
-        end
-        if animatingSprite[I] == true then
-            pokemonAnimation[I]:update(dt)
-            pokemonAnimationFrame[I] = pokemonAnimationFrame[I] + 1
-            if pokemonAnimationFrame[I] >= getFrames(pokemon[I]) then
-                animatingSprite[I] = false
-                pokemonAnimationFrame[I] = 0
-            end
         end
     end
-   
+    end
 end
 
 --Called every frame
 function love.draw(dt)
     for I=0,5 do
-        if pokemon[I] ~= nil and pokemon[I] ~= "None" then
-            --Sprite and name and crap
+        if I == 0 then
+            drawPokemon(0)
+        else
+            if pokemon[I] ~= nil and pokemon[I] ~= "None" then
+                drawPokemon(I)
+            end
+        end
+    end
+end
+
+function drawPokemon(I)
+--Sprite and name and crap
             if animatingSprite[I] == false then
                 love.graphics.draw(pokemonIMG[I], (I*shifter), 0)
             else
@@ -152,8 +179,6 @@ function love.draw(dt)
             expQuads[I] = love.graphics.newQuad(0, 0, map(pokemonCurEXP[I], 0, 100, 0, 110), 4, imgEXPBarFrame:getDimensions())
             love.graphics.draw(imgEXPBarBlue, expQuads[I], 16+(I*shifter), 71)
             love.graphics.draw(imgEXPBarFrame, 0+(I*shifter), 70)
-        end
-    end
 end
 
 function expNeeded(curLevel,expGroup)
