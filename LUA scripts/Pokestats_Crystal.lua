@@ -4,7 +4,6 @@
 -- To be used at http://www.twitch.tv/rngplayspokemon
 -- Created by dude22072
 --
-
 -- http://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_data_structure_in_Generation_II
 
 local textoutputpath = "pokestats.txt" --Path + text file name, or just text file name to output to current directory
