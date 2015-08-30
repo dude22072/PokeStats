@@ -220,6 +220,11 @@ function B(a)
 end
 
 function do_pokestats()
+--	if anything seems amiss, don't do an update:
+	if checkImpossibleValues then
+		return
+	end
+	
 	-- Status check
     
     
@@ -344,6 +349,19 @@ function do_pokestats()
 		elseif filecheck==file then
 			file:flush()
 		end
+	end
+end
+
+function checkImpossibleValues()
+	partyCount = memory.readbyteunsigned(0xDCD7)
+	partyByte1 = memory.readbyteunsigned(0xDCD8)
+	if partyCount > 6 
+	or partyByte1 == 255
+--	or b
+--	or c
+--	or d
+	then
+		return true
 	end
 end
 
