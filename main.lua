@@ -193,7 +193,7 @@ function drawStatus(x,y,statusFlagsIn,HP,hasPKRS)
 	local statusFlags = tonumber(statusFlagsIn)
 	if tonumber(HP) == 0 then isFNT = true end
 	if tonumber(hasPKRS) ~= 0 then isPKRS = true end
-	if bit.band(0x04,statusFlags) ~= 0 then isSLP = true end
+	if bit.band(0x07,statusFlags) ~= 0 then isSLP = true end
 	if bit.band(0x08,statusFlags) ~= 0 then isPSN = true end
 	if bit.band(0x10,statusFlags) ~= 0 then isBRN = true end
 	if bit.band(0x20,statusFlags) ~= 0 then isFRZ = true end
