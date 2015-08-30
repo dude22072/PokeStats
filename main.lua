@@ -170,7 +170,7 @@ function drawPokemon(I)
             
             --EXP Bar
             love.graphics.draw(imgEXPBarBack, 16+(I*shifter), 71)
-            expQuads[I] = love.graphics.newQuad(0, 0, map(pokemonCurEXP[I], 0, 100, 0, 110), 4, imgEXPBarFrame:getDimensions())
+            expQuads[I] = love.graphics.newQuad(0, 0, map(pokemonCurEXP[I], 0, expNeeded(pokemonLevel[I],getExpGroup(pokemon[I])), 0, 110), 4, imgEXPBarFrame:getDimensions())
             love.graphics.draw(imgEXPBarBlue, expQuads[I], 16+(I*shifter), 71)
             love.graphics.draw(imgEXPBarFrame, 0+(I*shifter), 70)
 end
@@ -1220,8 +1220,8 @@ function getFrames(species)
     elseif species ==  "Ho-oh" then
         return 0
     elseif species ==  "Celebi" then
-        return 0
-    else
         return 0]]
+    else
+        return 0
     end
 end

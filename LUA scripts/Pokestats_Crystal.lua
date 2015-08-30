@@ -221,11 +221,13 @@ end
 
 function do_pokestats()
 	-- Status check
+    
+    
   
 	timer = timer + 1
 	if timer >= timer_threshold then
 		timer = 0
-		
+		if B(team_count) > 6 then return end
 		if isempty(pokemonSpeciesNames) then
 			pokemonSpeciesNames = "Loading..."
 		end
@@ -265,7 +267,29 @@ function do_pokestats()
                 team[i].experience[4]=((((math.abs(team[i].experience[1])*65536))+(math.abs(team[i].experience[2])*256))+(math.abs(team[i].experience[3])))
             
                 --level/hp/status
-                team[i].status=memory.readbyteunsigned(team[i].start+0x20)
+                local tmp = memory.readbyteunsigned(team[i].start+0x20)
+                --[[
+                From Pokestats:
+                local statusname={"NIL","SLP","SLP","SLP","PSN","BRN","FRZ","PAR","PSN"}
+                3 sleeps for sleep counter. Poison at the end is "Badly Poisoned".
+                ]]
+                if tmp = 0x01 then
+                    team[i].status=2
+                elseif tmp = 0x02 then
+                    team[i].status=3
+                elseif tmp = 0x04 then
+                    team[i].status=4
+                elseif tmp = 0x08 then
+                    team[i].status=5
+                elseif tmp = 0x10 then
+                    team[i].status=6
+                elseif tmp = 0x20 then
+                    team[i].status=7
+                elseif tmp = 0x40 then
+                    team[i].status=8
+                else
+                    team[i].status=1
+                end
                 team[i].level=memory.readbyteunsigned(team[i].start+0x1F)
                 team[i].pokerus=memory.readbyteunsigned(team[i].start+0x1C)
                 --Hp reader
@@ -344,3 +368,5 @@ function do_pokestats()
 		end
 	end
 end
+
+--gui.register(do_pokestats)
