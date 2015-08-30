@@ -155,7 +155,7 @@ function drawPokemon(I)
             --   love.graphics.draw(imgStatus[statusname[pokemonStatus[I]+1]], 70+(I*shifter), 30)
             --end
 			
-			drawStatus(I * shifter + 72, 32, 0, 1, pokemonPKRS[I])			
+			drawStatus(I * shifter + 72, 32, pokemonStatus[I], pokemonHP[I], pokemonPKRS[I])			
             
             --if pokemonPKRS[I] ~= nil and pokemonPKRS[I] ~= "0" then
             --    love.graphics.draw(imgStatus.PKRS, 92+(I*shifter), 30)
@@ -187,11 +187,12 @@ function drawPokemon(I)
             love.graphics.draw(imgEXPBarFrame, 0+(I*shifter), 70)
 end
 
-function drawStatus(x,y,statusFlags,HP,hasPKRS)
+function drawStatus(x,y,statusFlagsIn,HP,hasPKRS)
 	-- this function could be made much more compact by simply performing the drawings conditional to the checks.
 	local isFNT, isPSN, isPKRS, isSLP, isBRN, isPAR, isFRZ = false,false,false,false,false,false,false
-	if HP == 0 then isFNT = true end
-	if hasPKRS ~= 0 then isPKRS = true end
+	local statusFlags = tonumber(statusFlagsIn)
+	if tonumber(HP) == 0 then isFNT = true end
+	if tonumber(hasPKRS) ~= 0 then isPKRS = true end
 	if bit.band(0x04,statusFlags) ~= 0 then isSLP = true end
 	if bit.band(0x08,statusFlags) ~= 0 then isPSN = true end
 	if bit.band(0x10,statusFlags) ~= 0 then isBRN = true end
