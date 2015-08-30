@@ -1,6 +1,8 @@
 require("AnAL")
+require("pokestats-conf")
+
 math.randomseed(os.time())
-local pokestatsTextFilePath = "D:/pokestats.txt" --The location of the pokestats outputed text file
+
 local shifter = 117 --The space between the starting of the pokemon info panels
 ---------------------------------------------------------------------------------------------------------------
 local file = nil
@@ -22,6 +24,14 @@ imgStatus = {}
     imgStatus.PKRS = love.graphics.newImage('status/PKRS.gif')
     imgStatus.PSN = love.graphics.newImage('status/PSN.gif')
     imgStatus.SLP = love.graphics.newImage('status/SLP.gif')
+	imgStatus.nBRN = love.graphics.newImage('nstatus/nBRN.gif')
+    imgStatus.nFNT = love.graphics.newImage('nstatus/nFNT.gif')
+    imgStatus.nFRZ = love.graphics.newImage('nstatus/nFRZ.gif')
+    imgStatus.nITEM = love.graphics.newImage('nstatus/nITEM.gif')
+    imgStatus.nPAR = love.graphics.newImage('nstatus/nPAR.gif')
+    imgStatus.nPKRS = love.graphics.newImage('nstatus/nPKRS.gif')
+    imgStatus.nPSN = love.graphics.newImage('nstatus/nPSN.gif')
+    imgStatus.nSLP = love.graphics.newImage('nstatus/nSLP.gif')
 pokemon = {}
 pokemonIMG = {}
 pokemonIMGANI = {}
@@ -81,7 +91,7 @@ function love.update(dt)
                 if pokemon[I] ~= "None" and pokemon[I] ~= "0" and pokemon[I] ~= nil then
                     pokemonIMG[I] = love.graphics.newImage('sprites/'..pokemon[I]..'.png')
                     pokemonNickname[I] = fileReader[2+(I*9)]
-                    if pokemonNickname[I] == animationStuff[1] then
+                    --[[if pokemonNickname[I] == animationStuff[1] then
                         if animationStuff[2] == false then
                             pokemonIMGANI[I] = love.graphics.newImage('animations/'..pokemon[I]..'Ani.png')
                             pokemonAnimation[I] = newAnimation(pokemonIMGANI[I], 64, 64, 0.02, getFrames(pokemon[I]))
@@ -90,7 +100,7 @@ function love.update(dt)
                             animationStuff[2] = true
                             animationStuff[3] = animationStuff[1]
                         end
-                    end
+                    end]]-- --animations disabled
                     
                     pokemonHP[I] = fileReader[3+(I*9)]
                     pokemonHPMax[I] = fileReader[4+(I*9)]
@@ -106,14 +116,14 @@ function love.update(dt)
                 else
         
                 end
-                if animatingSprite[I] == true then
+                --[[if animatingSprite[I] == true then
                     pokemonAnimation[I]:update(dt)
                     pokemonAnimationFrame[I] = pokemonAnimationFrame[I] + 1
                     if pokemonAnimationFrame[I] >= getFrames(pokemon[I]) then
                         animatingSprite[I] = false
                         pokemonAnimationFrame[I] = 0
                     end
-                end
+                end]]-- -- animations disabled
             end
         end
     end
@@ -136,21 +146,23 @@ function drawPokemon(I)
             if animatingSprite[I] == false then
                 love.graphics.draw(pokemonIMG[I], (I*shifter), 0)
             else
-                pokemonAnimation[I]:draw((I*shifter), 0)
+                --pokemonAnimation[I]:draw((I*shifter), 0) --animations disabled
             end
             love.graphics.print(pokemonNickname[I], 70+(I*shifter), 8)
             love.graphics.print("Lvl: "..pokemonLevel[I], 70+(I*shifter), 21)
             
-            if pokemonStatus[I] ~= "0" then
-                love.graphics.draw(imgStatus[statusname[pokemonStatus[I]+1]], 70+(I*shifter), 30)
-            end
+            --if pokemonStatus[I] ~= "0" then
+            --   love.graphics.draw(imgStatus[statusname[pokemonStatus[I]+1]], 70+(I*shifter), 30)
+            --end
+			
+			drawStatus(I * shifter + 72, 32, 0, 1, pokemonPKRS[I])			
             
-            if pokemonPKRS[I] ~= nil and pokemonPKRS[I] ~= "0" then
-                love.graphics.draw(imgStatus.PKRS, 92+(I*shifter), 30)
-            end
+            --if pokemonPKRS[I] ~= nil and pokemonPKRS[I] ~= "0" then
+            --    love.graphics.draw(imgStatus.PKRS, 92+(I*shifter), 30)
+            --end
             
             if pokemonItem[I] ~= nil and pokemonItem[I] ~= "0" then
-                love.graphics.draw(imgStatus.ITEM, 70+(I*shifter), 45)
+                love.graphics.draw(imgStatus.ITEM, 113+(I*shifter), 18)
                 --love.graphics.print(pokemonItem[I], 80+(I*shifter), 45)
             end
             
@@ -173,6 +185,40 @@ function drawPokemon(I)
             expQuads[I] = love.graphics.newQuad(0, 0, map(pokemonCurEXP[I], 0, expNeeded(pokemonLevel[I],getExpGroup(pokemon[I])), 0, 110), 4, imgEXPBarFrame:getDimensions())
             love.graphics.draw(imgEXPBarBlue, expQuads[I], 16+(I*shifter), 71)
             love.graphics.draw(imgEXPBarFrame, 0+(I*shifter), 70)
+end
+
+function drawStatus(x,y,statusFlags,HP,hasPKRS)
+	-- this function could be made much more compact by simply performing the drawings conditional to the checks.
+	local isFNT, isPSN, isPKRS, isSLP, isBRN, isPAR, isFRZ = false,false,false,false,false,false,false
+	if HP == 0 then isFNT = true end
+	if hasPKRS ~= 0 then isPKRS = true end
+	if bit.band(0x04,statusFlags) ~= 0 then isSLP = true end
+	if bit.band(0x08,statusFlags) ~= 0 then isPSN = true end
+	if bit.band(0x10,statusFlags) ~= 0 then isBRN = true end
+	if bit.band(0x20,statusFlags) ~= 0 then isFRZ = true end
+	if bit.band(0x40,statusFlags) ~= 0 then isPAR = true end
+	
+	love.graphics.draw(imgStatus.nFNT, 	x 		, y ) 
+	love.graphics.draw(imgStatus.nPKRS, x + 21 	, y ) 
+	love.graphics.draw(imgStatus.nSLP, 	x 		, y + 12) 
+	love.graphics.draw(imgStatus.nPSN, 	x + 21	, y + 12) 
+	love.graphics.draw(imgStatus.nBRN, 	x 		, y + 24) 
+	love.graphics.draw(imgStatus.nFRZ, 	x + 21	, y + 24) 
+	love.graphics.draw(imgStatus.nPAR, 	x 		, y + 36) 
+	
+	if statusFlags == 255 then -- make sure they're set for testing
+		isFNT = true
+		isPKRS = true
+	end
+	
+	if isFNT then	love.graphics.draw(imgStatus.FNT, 	x 		, y )	end
+	if isPKRS then	love.graphics.draw(imgStatus.PKRS, 	x + 21 	, y )	end
+	if isSLP then	love.graphics.draw(imgStatus.SLP, 	x 		, y + 12 )	end
+	if isPSN then	love.graphics.draw(imgStatus.PSN, 	x + 21	, y + 12)	end
+	if isBRN then	love.graphics.draw(imgStatus.BRN, 	x 		, y + 24)	end
+	if isFRZ then	love.graphics.draw(imgStatus.FRZ, 	x + 21	, y + 24)	end
+	if isPAR then	love.graphics.draw(imgStatus.PAR, 	x 		, y + 36)	end
+	
 end
 
 function expNeeded(curLevel,expGroup)
