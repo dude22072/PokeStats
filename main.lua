@@ -109,7 +109,6 @@ function love.update(dt)
                     pokemonPKRS[I] = fileReader[7+(I*9)]
                     pokemonItem[I] = fileReader[8+(I*9)]
                     pokemonCurEXP[I] = fileReader[9+(I*9)]
-            
                     pokemonEXPDif[I] = expNeeded(pokemonLevel[I], getExpGroup(pokemon[I]))
                     pokemonCurEXP[I] = pokemonCurEXP[I] - pokemonEXPDif[I]
                     pokemonMaxEXP[I] = (expNeeded((pokemonLevel[I] + 1), getExpGroup(pokemon[I]))) - pokemonEXPDif[I]
@@ -131,13 +130,9 @@ end
 
 function love.draw(dt)
     for I=0,5 do
-        if I == 0 then
-            drawPokemon(0)
-        else
             if pokemon[I] ~= nil and pokemon[I] ~= "None" then
                 drawPokemon(I)
             end
-        end
     end
 end
 
@@ -182,7 +177,7 @@ function drawPokemon(I)
             
             --EXP Bar
             love.graphics.draw(imgEXPBarBack, 16+(I*shifter), 71)
-            expQuads[I] = love.graphics.newQuad(0, 0, map(pokemonCurEXP[I], 0, expNeeded(pokemonLevel[I],getExpGroup(pokemon[I])), 0, 110), 4, imgEXPBarFrame:getDimensions())
+            expQuads[I] = love.graphics.newQuad(0, 0, map(pokemonCurEXP[I], 0, pokemonMaxEXP[I], 0, 48), 4, imgEXPBarFrame:getDimensions())
             love.graphics.draw(imgEXPBarBlue, expQuads[I], 16+(I*shifter), 71)
             love.graphics.draw(imgEXPBarFrame, 0+(I*shifter), 70)
 end
@@ -762,7 +757,7 @@ function mysplit(inputstr, sep)
 end
 
 function map(x,in_min,in_max,out_min,out_max)
-    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 end
 
 function getFrames(species)

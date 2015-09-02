@@ -6,7 +6,7 @@
 --
 -- http://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_data_structure_in_Generation_II
 
-local textoutputpath = "pokestats.txt" --Path + text file name, or just text file name to output to current directory
+local textoutputpath = "D:/pokestats.txt" --Path + text file name, or just text file name to output to current directory
 
 local pokemonSpeciesNames={
  "None",
@@ -219,19 +219,41 @@ function B(a)
   return memory.readbyteunsigned(a)
 end
 
+function W(a)
+  return memory.readwordunsigned(a)
+end
+
+function D(a)
+  return memory.readdwordunsigned(a)
+end
+
 function do_pokestats()
---	if anything seems amiss, don't do an update:
-	if checkImpossibleValues then
-		return
-	end
-	
-	-- Status check
     
     
+    --shiny
+       wildIV = {}
+       wildIV.read1 = B(0xD20C)
+       wildIV.read2 = B(0xD20D)
+       wildIV.defense = bit.band(wildIV.read1, 0x0F)
+       wildIV.attack = bit.rshift(bit.band(wildIV.read1,0xF0), 4) 
+       wildIV.speed = bit.band(wildIV.read2, 0x0F)
+       wildIV.special = bit.rshift(bit.band(wildIV.read2,0xF0), 4) 
+       --print("ATK:"..wildIV.attack.." DEF:"..wildIV.defense.." SPD:"..wildIV.speed.." SPL:"..wildIV.special)
+       if B(0xD22D) == 0x01 then
+            if wildIV.special == 10 and wildIV.speed == 10 and wildIV.defense == 10 then
+                if wildIV.attack == 2 or wildIV.attack == 3 or wildIV.attack == 6 or wildIV.attack == 7 or wildIV.attack == 10 or wildIV.attack == 11 or wildIV.attack == 14 or wildIV.attack == 15 then
+                    gui.text(0,35,"shiny","yellow")
+                end
+            end
+        end
   
 	timer = timer + 1
 	if timer >= timer_threshold then
 		timer = 0
+    -- if anything seems amiss, don't do an update:
+	--if checkImpossibleValues then
+	--	return
+	--end
 		if B(team_count) > 6 then return end
 		if isempty(pokemonSpeciesNames) then
 			pokemonSpeciesNames = "Loading..."
@@ -244,7 +266,7 @@ function do_pokestats()
                 if stringTerminated then 
                     team[i].nickname[j]=0x7F
                 else 
-                    team[i].nickname[j]=memory.readbyteunsigned(team[i].startNick-1+j)
+                    team[i].nickname[j]=B(team[i].startNick-1+j)
 
                     if team[i].nickname[j] == 0x50 then 
                         stringTerminated = true 
@@ -253,13 +275,13 @@ function do_pokestats()
             end
             
                 --Species & Item
-                team[i].species=memory.readbyteunsigned(team[i].start)
-                team[i].item=memory.readbyteunsigned(team[i].start+0x01)
+                team[i].species=B(team[i].start)
+                team[i].item=B(team[i].start+0x01)
             
                 --Experience
-                team[i].experience[1]=memory.readbyteunsigned(team[i].start+0x08)
-                team[i].experience[2]=memory.readbyteunsigned(team[i].start+0x09)
-                team[i].experience[3]=memory.readbyteunsigned(team[i].start+0x0A)
+                team[i].experience[1]=B(team[i].start+0x08)
+                team[i].experience[2]=B(team[i].start+0x09)
+                team[i].experience[3]=B(team[i].start+0x0A)
                 if team[i].experience[1] < 0 then
                     team[i].experience[1] = (team[i].experience[1]+256)%256
                 end 
@@ -272,15 +294,15 @@ function do_pokestats()
                 team[i].experience[4]=((((math.abs(team[i].experience[1])*65536))+(math.abs(team[i].experience[2])*256))+(math.abs(team[i].experience[3])))
             
                 --level/hp/status
-                team[i].status = memory.readbyteunsigned(team[i].start+0x20)
-                team[i].level=memory.readbyteunsigned(team[i].start+0x1F)
-                team[i].pokerus=memory.readbyteunsigned(team[i].start+0x1C)
+                team[i].status = B(team[i].start+0x20)
+                team[i].level=B(team[i].start+0x1F)
+                team[i].pokerus=B(team[i].start+0x1C)
                 --Hp reader
-                team[i].curHPB1=memory.readbyteunsigned(team[i].start+0x22)
-                team[i].curHPB2=memory.readbyteunsigned(team[i].start+0x23)
+                team[i].curHPB1=B(team[i].start+0x22)
+                team[i].curHPB2=B(team[i].start+0x23)
                 team[i].currentHP=(team[i].curHPB1*255)+team[i].curHPB2
-                team[i].maxHPB1=memory.readbyteunsigned(team[i].start+0x24)
-                team[i].maxHPB2=memory.readbyteunsigned(team[i].start+0x25)
+                team[i].maxHPB1=B(team[i].start+0x24)
+                team[i].maxHPB2=B(team[i].start+0x25)
                 team[i].totalHP=(team[i].maxHPB1*255)+team[i].maxHPB2
 		end
         
@@ -290,13 +312,12 @@ function do_pokestats()
                 if stringTerminated then 
                     team[7].nickname[j]=0x7F
                 else 
-                    team[7].nickname[j]=memory.readbyteunsigned(team[7].startNick-1+j)
+                    team[7].nickname[j]=B(team[7].startNick-1+j)
                     if team[7].nickname[j] == 0x50 then 
                         stringTerminated = true 
                     end 
                 end 
             end
-        
        
 		--File Output
 		if filecheck~=file then
@@ -353,8 +374,8 @@ function do_pokestats()
 end
 
 function checkImpossibleValues()
-	partyCount = memory.readbyteunsigned(0xDCD7)
-	partyByte1 = memory.readbyteunsigned(0xDCD8)
+	partyCount = B(team_count)
+	partyByte1 = B(team[1].start)
 	if partyCount > 6 
 	or partyByte1 == 255
 --	or b
