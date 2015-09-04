@@ -295,7 +295,21 @@ function do_pokestats()
 			team[i].magic=bit.bxor(team[i].personality, team[i].trainerID)
 			
 			--gender
-			team[i].gender=team[i].personality%256
+			team[i].gendervalue=team[i].personality%256
+            team[i].genderthreshold=B(((0x0825477C+28*i)+16))
+            if team[i].genderthreshold == 255 then
+                team[i].gender = 0
+            elseif team[i].genderthreshold == 0 then
+                team[i].gender = 1
+            elseif team[i].genderthreshold == 254 then
+                team[i].gender = 2
+            else
+                if team[i].gendervalue >= team[i].genderthreshold then
+                    team[i].gender = 1
+                else
+                    team[i].gender = 2
+                end
+            end
 			
 			--I's
 			team[i].i=team[i].personality%24

@@ -32,6 +32,9 @@ imgStatus = {}
     imgStatus.nPKRS = love.graphics.newImage('nstatus/nPKRS.gif')
     imgStatus.nPSN = love.graphics.newImage('nstatus/nPSN.gif')
     imgStatus.nSLP = love.graphics.newImage('nstatus/nSLP.gif')
+imgGender = {}
+    imgGender.male = love.graphics.newImage('status/GENDERMALE.gif')
+    imgGender.female = love.graphics.newImage('status/GENDERFEMALE.gif')
 pokemon = {}
 pokemonIMG = {}
 pokemonIMGANI = {}
@@ -55,6 +58,7 @@ pokemonItem = {}
 pokemonCurEXP = {}
 pokemonMaxEXP = {}
 pokemonEXPDif = {}
+pokemonGender = {}
 hpQuads = {}
 hpGreyQuad = {}
 expQuads = {}
@@ -112,6 +116,7 @@ function love.update(dt)
                     pokemonEXPDif[I] = expNeeded(pokemonLevel[I], getExpGroup(pokemon[I]))
                     pokemonCurEXP[I] = pokemonCurEXP[I] - pokemonEXPDif[I]
                     pokemonMaxEXP[I] = (expNeeded((pokemonLevel[I] + 1), getExpGroup(pokemon[I]))) - pokemonEXPDif[I]
+                    pokemonGender[I] = fileReader[57+(1*I)]
                 else
                     pokemonNickname[I] = ""
                     pokemonHP[I] = 0
@@ -123,6 +128,7 @@ function love.update(dt)
                     pokemonCurEXP[I] = 0
                     pokemonEXPDif[I] = 0
                     pokemonMaxEXP[I] = 0
+                    pokemonGender[I] = 0
                 end
                 --[[if animatingSprite[I] == true then
                     pokemonAnimation[I]:update(dt)
@@ -168,6 +174,12 @@ function drawPokemon(I)
             if pokemonItem[I] ~= nil and pokemonItem[I] ~= "0" then
                 love.graphics.draw(imgStatus.ITEM, 113+(I*shifter), 18)
                 --love.graphics.print(pokemonItem[I], 80+(I*shifter), 45)
+            end
+            
+            if tonumber(pokemonGender[I]) == 1 then
+                love.graphics.draw(imgGender.male, 60+(I*shifter), 50)
+            elseif tonumber(pokemonGender[I]) == 2 then
+                love.graphics.draw(imgGender.female, 60+(I*shifter), 50)
             end
             
             --HP Bar

@@ -290,6 +290,8 @@ function do_pokestats()
                 team[i].maxHPB1=B(team[i].start+0x24)
                 team[i].maxHPB2=B(team[i].start+0x25)
                 team[i].totalHP=(team[i].maxHPB1*255)+team[i].maxHPB2
+                
+                team[i].gender=0
 		end
         
         
@@ -350,6 +352,9 @@ function do_pokestats()
                 for k=1,10 do
                     file:write(charMap[team[7].nickname[k]+1])
                 end
+            end
+            for i=1,6 do
+                file:write("\n"..team[i].gender)
             end
             
 			file:flush()
