@@ -1,12 +1,11 @@
+require("Pokestats_Config")
 --
 -- Pokémon Status Display LUA Script
 -- for VBA-RR
 -- To be used at http://www.twitch.tv/rngplayspokemon
 -- Created by dude22072
---
 -- http://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_data_structure_in_Generation_II
-
-local textoutputpath = "D:/pokestats.txt" --Path + text file name, or just text file name to output to current directory
+--
 
 local pokemonSpeciesNames={
  "None",
@@ -213,19 +212,6 @@ end
 
 -- timer for status updates (#frames)
 local timer = 0;
-local timer_threshold = 180;
-
-function B(a)
-  return memory.readbyteunsigned(a)
-end
-
-function W(a)
-  return memory.readwordunsigned(a)
-end
-
-function D(a)
-  return memory.readdwordunsigned(a)
-end
 
 function do_pokestats()
     

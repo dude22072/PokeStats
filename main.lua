@@ -113,7 +113,16 @@ function love.update(dt)
                     pokemonCurEXP[I] = pokemonCurEXP[I] - pokemonEXPDif[I]
                     pokemonMaxEXP[I] = (expNeeded((pokemonLevel[I] + 1), getExpGroup(pokemon[I]))) - pokemonEXPDif[I]
                 else
-        
+                    pokemonNickname[I] = ""
+                    pokemonHP[I] = 0
+                    pokemonHPMax[I] = 0
+                    pokemonLevel[I] = 0
+                    pokemonStatus[I] = 0
+                    pokemonPKRS[I] = 0
+                    pokemonItem[I] = 0
+                    pokemonCurEXP[I] = 0
+                    pokemonEXPDif[I] = 0
+                    pokemonMaxEXP[I] = 0
                 end
                 --[[if animatingSprite[I] == true then
                     pokemonAnimation[I]:update(dt)
@@ -130,7 +139,7 @@ end
 
 function love.draw(dt)
     for I=0,5 do
-            if pokemon[I] ~= nil and pokemon[I] ~= "None" then
+            if pokemon[I] ~= nil and pokemon[I] ~= "None" and pokemon[I] ~= "0" then
                 drawPokemon(I)
             end
     end
@@ -218,6 +227,7 @@ function drawStatus(x,y,statusFlagsIn,HP,hasPKRS)
 end
 
 function expNeeded(curLevel,expGroup)
+    --Slow, Medium Slow, Medium Fast, Fast, Erratic, Fluctuating
     if expGroup == 1 then
         return ((5 * (curLevel ^ 3)) / 4)
     elseif expGroup == 2 then
@@ -226,8 +236,26 @@ function expNeeded(curLevel,expGroup)
         return (curLevel ^ 3)
     elseif expGroup == 4 then
         return ((4 * (curLevel ^ 3)) / 5)
+    elseif expGroup == 5 then
+        if curLevel < 50 then
+            return (((curLevel^3)*(100-curLevel))/50)
+        elseif curLevel < 68 then
+            return (((curLevel^3)*(150-curLevel))/100)
+        elseif curLevel < 98 then
+            return (((curLevel^3)*((1911-10-curLevel)/3))/500)
+        else
+            return (((curLevel^3)*(160-curLevel))/100)
+        end
+    elseif expGroup == 6 then
+        if curLevel < 15 then
+            return ((curLevel^3)*((((curLevel+1)/3)+24)/50))
+        elseif curLevel < 36 then
+            return ((curLevel ^ 3)*((curLevel+14)/50))
+        else
+            return ((curLevel^3)*(((curLevel/2)+32)/50))
+        end
     else
-        return 1
+        return 0
     end
 end
 
