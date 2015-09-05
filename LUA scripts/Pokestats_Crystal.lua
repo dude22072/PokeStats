@@ -291,6 +291,30 @@ function do_pokestats()
                 team[i].maxHPB2=B(team[i].start+0x25)
                 team[i].totalHP=(team[i].maxHPB1*255)+team[i].maxHPB2
                 
+                --Pokestats 3 Stuff
+                if team[i].species > 0 and team[i].species < 251 then
+                    team[i].baseStatsStart=((0x051424-0x1F)+((tonumber(team[i].species))*0x1F))
+                    team[i].baseStatsStartFix=DEC_HEX(team[1].baseStatsStart)
+                
+                
+                    team[i].expGroupData=B(team[i].baseStatsStartFix+0x16)
+                    if tonumber(team[i].expGroupData) == 0 then
+                        team[i].expGroup=3
+                    elseif tonumber(team[i].expGroupData) == 3 then
+                        team[i].expGroup=2
+                    elseif tonumber(team[i].expGroupData) == 4 then
+                        team[i].expGroup=4
+                    elseif tonumber(team[i].expGroupData) == 5 then
+                        team[i].expGroup=1
+                    else
+                        team[i].expGroup=tonumber(team[i].expGroupData)
+                    end
+                else
+                    team[i].expGroup=254
+                end
+                
+                team[i].genderRatio=B(team[i].baseStatsStartFix+0x0D)
+                
                 team[i].gender=0
 		end
         
@@ -356,7 +380,12 @@ function do_pokestats()
             for i=1,6 do
                 file:write("\n"..team[i].gender)
             end
-            
+            for i=1,6 do
+                file:write("\n"..team[i].expGroup)
+            end
+            for i=1,6 do
+                file:write("\n"..team[i].genderRatio)
+            end
 			file:flush()
 		elseif filecheck==file then
 			file:flush()
@@ -375,6 +404,16 @@ function checkImpossibleValues()
 	then
 		return true
 	end
+end
+
+function DEC_HEX(IN)
+    local B,K,OUT,I,D=16,"0123456789ABCDEF","",0
+    while IN>0 do
+        I=I+1
+        IN,D=math.floor(IN/B),math.mod(IN,B)+1
+        OUT=string.sub(K,D,D)..OUT
+    end
+    return OUT
 end
 
 --gui.register(do_pokestats)
