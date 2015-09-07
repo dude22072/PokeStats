@@ -176,7 +176,7 @@ local charMap={
 --All Empty ""'s Are REQUIRED
 
 --Locals
-local team_count = 0xDCD7
+local team_count = pointers.crystal.teamCount
 local team = {}
 team[1] = {}
 team[2] = {}
@@ -185,19 +185,19 @@ team[4] = {}
 team[5] = {}
 team[6] = {}
 team[7] = {} --In-Battle Pokemon
-team[1].start = 0xDCDF
+team[1].start = pointers.crystal.partyStart
 team[2].start=team[1].start+48
 team[3].start=team[1].start+96
 team[4].start=team[1].start+144
 team[5].start=team[1].start+192
 team[6].start=team[1].start+240
-team[1].startNick=0xDE41
-team[2].startNick=0xDE4C
-team[3].startNick=0xDE57
-team[4].startNick=0xDE62
-team[5].startNick=0xDE6D
-team[6].startNick=0xDD78
-team[7].startNick=0xC621
+team[1].startNick=pointers.crystal.partyNicknames
+team[2].startNick=team[1].startNick+0x0B
+team[3].startNick=team[1].startNick+0x16
+team[4].startNick=team[1].startNick+0x21
+team[5].startNick=team[1].startNick+0x2C
+team[6].startNick=team[1].startNick+0x37
+team[7].startNick=pointers.crystal.inBattleNickname
 
 for i=1,7 do team[i].nickname = {} end
 for i=1,6 do team[i].experience = {} end
@@ -292,29 +292,6 @@ function do_pokestats()
                 team[i].totalHP=(team[i].maxHPB1*255)+team[i].maxHPB2
                 
                 --Pokestats 3 Stuff
-                if team[i].species > 0 and team[i].species < 251 then
-                    team[i].baseStatsStart=((0x051424-0x1F)+((tonumber(team[i].species))*0x1F))
-                    team[i].baseStatsStartFix=DEC_HEX(team[1].baseStatsStart)
-                
-                
-                    team[i].expGroupData=B(team[i].baseStatsStartFix+0x16)
-                    if tonumber(team[i].expGroupData) == 0 then
-                        team[i].expGroup=3
-                    elseif tonumber(team[i].expGroupData) == 3 then
-                        team[i].expGroup=2
-                    elseif tonumber(team[i].expGroupData) == 4 then
-                        team[i].expGroup=4
-                    elseif tonumber(team[i].expGroupData) == 5 then
-                        team[i].expGroup=1
-                    else
-                        team[i].expGroup=tonumber(team[i].expGroupData)
-                    end
-                else
-                    team[i].expGroup=254
-                end
-                
-                team[i].genderRatio=B(team[i].baseStatsStartFix+0x0D)
-                
                 team[i].gender=0
 		end
         
@@ -380,12 +357,6 @@ function do_pokestats()
             for i=1,6 do
                 file:write("\n"..team[i].gender)
             end
-            for i=1,6 do
-                file:write("\n"..team[i].expGroup)
-            end
-            for i=1,6 do
-                file:write("\n"..team[i].genderRatio)
-            end
 			file:flush()
 		elseif filecheck==file then
 			file:flush()
@@ -404,16 +375,6 @@ function checkImpossibleValues()
 	then
 		return true
 	end
-end
-
-function DEC_HEX(IN)
-    local B,K,OUT,I,D=16,"0123456789ABCDEF","",0
-    while IN>0 do
-        I=I+1
-        IN,D=math.floor(IN/B),math.mod(IN,B)+1
-        OUT=string.sub(K,D,D)..OUT
-    end
-    return OUT
 end
 
 --gui.register(do_pokestats)
