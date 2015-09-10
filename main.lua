@@ -36,6 +36,7 @@ imgStatus = {}
 imgGender = {}
     imgGender.male = love.graphics.newImage('status/GENDERMALE.gif')
     imgGender.female = love.graphics.newImage('status/GENDERFEMALE.gif')
+imgShiny = love.graphics.newImage('status/SHINY.gif')
 pokemon = {}
 pokemonIMG = {}
 pokemonIMGANI = {}
@@ -61,6 +62,7 @@ pokemonMaxEXP = {}
 pokemonEXPDif = {}
 pokemonGender = {}
 pokemonEXPGroup = {}
+pokemonIsShiny = {}
 hpQuads = {}
 hpGreyQuad = {}
 expQuads = {}
@@ -120,6 +122,7 @@ function love.update(dt)
                     pokemonCurEXP[I] = pokemonCurEXP[I] - pokemonEXPDif[I]
                     pokemonMaxEXP[I] = (expNeeded((pokemonLevel[I] + 1), pokemonEXPGroup[I])) - pokemonEXPDif[I]
                     pokemonGender[I] = fileReader[57+(1*I)]
+                    pokemonIsShiny[I] = fileReader[63+(1*I)]
                 else
                     pokemonNickname[I] = ""
                     pokemonHP[I] = 0
@@ -133,6 +136,7 @@ function love.update(dt)
                     pokemonMaxEXP[I] = 0
                     pokemonGender[I] = 0
                     pokemonEXPGroup[I] = 0
+                    pokemonIsShiny[I] = 0
                 end
                 --[[if animatingSprite[I] == true then
                     pokemonAnimation[I]:update(dt)
@@ -180,10 +184,16 @@ function drawPokemon(I)
                 --love.graphics.print(pokemonItem[I], 80+(I*shifter), 45)
             end
             
+            --Gender
             if tonumber(pokemonGender[I]) == 1 then
-                love.graphics.draw(imgGender.male, 60+(I*shifter), 50)
+                love.graphics.draw(imgGender.male, 59+(I*shifter), 49)
             elseif tonumber(pokemonGender[I]) == 2 then
-                love.graphics.draw(imgGender.female, 60+(I*shifter), 50)
+                love.graphics.draw(imgGender.female, 59+(I*shifter), 49)
+            end
+            
+            --Shiny Icon
+            if tonumber(pokemonIsShiny[I]) == 1 then
+                love.graphics.draw(imgShiny, 57+(I*shifter), 4)
             end
             
             --HP Bar

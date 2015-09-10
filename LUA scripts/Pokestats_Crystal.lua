@@ -200,7 +200,7 @@ team[6].startNick=team[1].startNick+0x37
 team[7].startNick=pointers.crystal.inBattleNickname
 
 for i=1,7 do team[i].nickname = {} end
-for i=1,6 do team[i].experience = {} end
+for i=1,6 do team[i].experience = {}; team[i].iv = {} end
 
 ---File Output
 local file=io.open(textoutputpath, "w")
@@ -293,6 +293,22 @@ function do_pokestats()
                 
                 --Pokestats 3 Stuff
                 team[i].gender=0
+                
+                team[i].iv.read1 = B(team[i].start+0x15)
+                team[i].iv.read2 = B(team[i].start+0x16)
+                team[i].iv.defense = bit.band(team[i].iv.read1, 0x0F)
+                team[i].iv.attack = bit.rshift(bit.band(team[i].iv.read1,0xF0), 4) 
+                team[i].iv.speed = bit.band(team[i].iv.read2, 0x0F)
+                team[i].iv.special = bit.rshift(bit.band(team[i].iv.read2,0xF0), 4) 
+                if team[i].iv.special == 10 and team[i].iv.speed == 10 and team[i].iv.defense == 10 then
+                    if team[i].iv.attack == 2 or team[i].iv.attack == 3 or team[i].iv.attack == 6 or team[i].iv.attack == 7 or team[i].iv.attack == 10 or team[i].iv.attack == 11 or team[i].iv.attack == 14 or team[i].iv.attack == 15 then
+                        team[i].isShiny = 1
+                    else
+                        team[i].isShiny = 0
+                    end
+                else
+                    team[i].isShiny = 0
+                end
 		end
         
         
@@ -356,6 +372,9 @@ function do_pokestats()
             end
             for i=1,6 do
                 file:write("\n"..team[i].gender)
+            end
+            for i=1,6 do
+                file:write("\n"..team[i].isShiny)
             end
 			file:flush()
 		elseif filecheck==file then
