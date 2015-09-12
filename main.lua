@@ -97,7 +97,11 @@ function love.update(dt)
             for I=0,5 do
                 pokemon[I] = fileReader[1+(I*9)]
                 if pokemon[I] ~= "None" and pokemon[I] ~= "0" and pokemon[I] ~= nil then
-                    pokemonIMG[I] = love.graphics.newImage('sprites/'..pokemon[I]..'.png')
+                    if tonumber(pokemonIsShiny[I]) == 1 and shinyDisplayStyle ~= 1 then
+                        pokemonIMG[I] = love.graphics.newImage('ssprites/'..pokemon[I]..'.png')
+                    else
+                        pokemonIMG[I] = love.graphics.newImage('sprites/'..pokemon[I]..'.png')
+                    end
                     pokemonNickname[I] = fileReader[2+(I*9)]
                     --[[if pokemonNickname[I] == animationStuff[1] then
                         if animationStuff[2] == false then
@@ -192,7 +196,7 @@ function drawPokemon(I)
             end
             
             --Shiny Icon
-            if tonumber(pokemonIsShiny[I]) == 1 then
+            if tonumber(pokemonIsShiny[I]) == 1 and shinyDisplayStyle ~= 0 then
                 love.graphics.draw(imgShiny, 57+(I*shifter), 4)
             end
             
