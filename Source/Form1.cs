@@ -142,7 +142,8 @@ namespace pokestats
                         }
 
                         //lines = File.ReadAllLines(settings["textFilePath"]);
-
+                        if (lines.Count == 0)
+                            return;
                     }
                     catch (Exception f)
                     {
