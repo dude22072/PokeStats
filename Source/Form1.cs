@@ -245,7 +245,8 @@ namespace pokestats
             }
             catch (Exception exc)
             {
-                File.Copy(settings["textFilePath"], "pokestatsSOURCEOFPROBLEM.txt");
+                File.Copy(settings["textFilePath"], "pokestatsSOURCEOFPROBLEM.txt",true);
+                File.Delete("error.txt");
                 File.WriteAllText("error.txt", "Error occured when drawing new screen: "+exc.Message);
             }
         }
