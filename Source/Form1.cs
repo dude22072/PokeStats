@@ -122,122 +122,130 @@ namespace pokestats
 
         private void update(object sender, PaintEventArgs e)
         {
-            if (!severeError)
+            try
             {
-                Graphics gr = e.Graphics;
-                gr.FillRectangle(Brushes.Black, 0, 0, this.ClientSize.Width, this.ClientSize.Height);
-                List<string> lines = new List<string>();
-                try
+                if (!severeError)
                 {
-                    var fs = new FileStream(settings["textFilePath"], FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                    using (var sr = new StreamReader(fs))
-                    {
-                        string s ="";
-                        while((s = sr.ReadLine()) != null)
-                        {
-                            lines.Add(s);
-                        }
-                    }
-
-                    //lines = File.ReadAllLines(settings["textFilePath"]);
-
-                }
-                catch (Exception f)
-                {
-                    lines.Add("An error has occured: " + f.Message);
-                    File.WriteAllLines("error.txt", lines);
-                    gr = lastGraphics;
-                    return;
-                }
-                if (lines[0] == "None")//No pokemon
-                {
-                    SizeF calcSize = gr.MeasureString("No Pokémon yet!", new Font("pokemon fireleaf", 20));
-                    Point p = new Point((W / 2) - (int)(calcSize.Width / 2), (H / 2) - (int)(calcSize.Height / 2));
-                    gr.DrawString("No Pokémon yet!", new Font("pokemon fireleaf", 20), Brushes.White, p);
-                    return;
-                }
-                if (lines[0] == "")//uhm wat?
-                {
-                    gr.DrawString("File empty!", new Font("pokemon fireleaf", 1), Brushes.White, 0,0);
-                }
-
-                Pokemon mon;
-                Font font1 = new Font("pokemon fireleaf", 8f);
-                Font font2 =  new Font("pokemon fireleaf",10f);
-                for(int i = 0; i<6; i++)
-                {
-                    int k =i*9;
+                    Graphics gr = e.Graphics;
+                    gr.FillRectangle(Brushes.Black, 0, 0, this.ClientSize.Width, this.ClientSize.Height);
+                    List<string> lines = new List<string>();
                     try
                     {
-                        mon = new Pokemon(lines[k], lines[k + 1], lines[k + 2], lines[k + 3], lines[k + 4], lines[k + 5], lines[k + 6], lines[k + 7], lines[k + 8], lines[56 + i]);
-                    }
-                    catch
-                    {
-                        continue;
-                    }
-                    if (mon.name != "")
-                    {
-                        int xpDiff = expNeeded(mon.level, expgroups[mon.species]);
-                        mon.currentEXP = mon.currentEXP - xpDiff ;
-                        mon.expNeeded = expNeeded(mon.level + 1, expgroups[mon.species]) - xpDiff; 
-                        //yes this could've been calculated when it's needed, but I prefer it this way, I really thought about doing it a different way though.
-                        
-                        k = offset + (i * divider);
-
-                        //Sprite
-                        if (images.ContainsKey(mon.species))
-                           gr.DrawImage(images[mon.species],new Point(k, 0));
-                        else
-                            gr.DrawImage(images["None"], new Point(k, 0));
-
-                        //Name
-                        gr.DrawString(mon.name, font1, Brushes.White, k + 70,2);
-
-                        //Level
-                        gr.DrawString("Lvl: "+mon.level, font2, Brushes.White, k + 70, 14);
-
-                        //item
-                        if(mon.item)
-                            gr.DrawImage(images["ITEM"], k + 113,18);
-
-                        //gender (doesn't work? or all pokemon are genderless)
-                        if (mon.gender == 1)
-                            gr.DrawImage(images["GENDERMALE"], k + 59, 49);
-                        if (mon.gender == 2)
-                            gr.DrawImage(images["GENDERFEMALE"], k + 59, 49);
-
-                        //Statusses
-                        gr.DrawImage(images[mon.fntStatus], k + 72, 32);
-                        gr.DrawImage(images[mon.pkrsStatus], k + 93, 32);
-                        gr.DrawImage(images[mon.slpStatus], k + 72, 44);
-                        gr.DrawImage(images[mon.psnStatus], k + 93, 44);
-                        gr.DrawImage(images[mon.brnStatus], k + 72, 56);
-                        gr.DrawImage(images[mon.parStatus], k + 93, 56);
-                        gr.DrawImage(images[mon.frzStatus], k + 72, 68);
-
-                        //hpbar
-                        gr.DrawImage(images["BARhpGRAY"], k, 60, 70, 9);
-                        if (mon.curHP != 0)
+                        var fs = new FileStream(settings["textFilePath"], FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                        using (var sr = new StreamReader(fs))
                         {
-                            double hpFract = (double)mon.curHP / (double)mon.maxHP;
-                            string hpColor = "GREEN";
-                            if (hpFract < 0.5)
-                                hpColor = "YELLOW";
-                            if (hpFract < 0.25)
-                                hpColor = "RED";
-                            gr.DrawImage(images["BARhp" + hpColor], k + 15, 60, (int) (56 * hpFract), 9);
+                            string s = "";
+                            while ((s = sr.ReadLine()) != null)
+                            {
+                                lines.Add(s);
+                            }
                         }
-                        gr.DrawImage(images["BAR"], k - 1, 60);
 
-                        //xp bar
-                        gr.DrawImage(images["BARexpBACK"], k + 16, 71);
-                        if(mon.expNeeded != 0)
-                            gr.DrawImage(images["BARexpBLUE"], k + 16, 71,(float) ((double) mon.currentEXP / (double) mon.expNeeded) * 48, 4);
-                        gr.DrawImage(images["BARexpFRAME"], k, 70);
-                    } //end of the if
-                }//end of the forloop
+                        //lines = File.ReadAllLines(settings["textFilePath"]);
 
-                lastGraphics = gr;
+                    }
+                    catch (Exception f)
+                    {
+                        lines.Add("An error has occured: " + f.Message);
+                        File.WriteAllLines("error.txt", lines);
+                        gr = lastGraphics;
+                        return;
+                    }
+                    if (lines[0] == "None")//No pokemon
+                    {
+                        SizeF calcSize = gr.MeasureString("No Pokémon yet!", new Font("pokemon fireleaf", 20));
+                        Point p = new Point((W / 2) - (int)(calcSize.Width / 2), (H / 2) - (int)(calcSize.Height / 2));
+                        gr.DrawString("No Pokémon yet!", new Font("pokemon fireleaf", 20), Brushes.White, p);
+                        return;
+                    }
+                    if (lines[0] == "")//uhm wat?
+                    {
+                        gr.DrawString("File empty!", new Font("pokemon fireleaf", 1), Brushes.White, 0, 0);
+                    }
+
+                    Pokemon mon;
+                    Font font1 = new Font("pokemon fireleaf", 8f);
+                    Font font2 = new Font("pokemon fireleaf", 10f);
+                    for (int i = 0; i < 6; i++)
+                    {
+                        int k = i * 9;
+                        try
+                        {
+                            mon = new Pokemon(lines[k], lines[k + 1], lines[k + 2], lines[k + 3], lines[k + 4], lines[k + 5], lines[k + 6], lines[k + 7], lines[k + 8], lines[56 + i]);
+                        }
+                        catch
+                        {
+                            continue;
+                        }
+                        if (mon.name != "")
+                        {
+                            int xpDiff = expNeeded(mon.level, expgroups[mon.species]);
+                            mon.currentEXP = mon.currentEXP - xpDiff;
+                            mon.expNeeded = expNeeded(mon.level + 1, expgroups[mon.species]) - xpDiff;
+                            //yes this could've been calculated when it's needed, but I prefer it this way, I really thought about doing it a different way though.
+
+                            k = offset + (i * divider);
+
+                            //Sprite
+                            if (images.ContainsKey(mon.species))
+                                gr.DrawImage(images[mon.species], new Point(k, 0));
+                            else
+                                gr.DrawImage(images["None"], new Point(k, 0));
+
+                            //Name
+                            gr.DrawString(mon.name, font1, Brushes.White, k + 70, 2);
+
+                            //Level
+                            gr.DrawString("Lvl: " + mon.level, font2, Brushes.White, k + 70, 14);
+
+                            //item
+                            if (mon.item)
+                                gr.DrawImage(images["ITEM"], k + 113, 18);
+
+                            //gender (doesn't work? or all pokemon are genderless)
+                            if (mon.gender == 1)
+                                gr.DrawImage(images["GENDERMALE"], k + 59, 49);
+                            if (mon.gender == 2)
+                                gr.DrawImage(images["GENDERFEMALE"], k + 59, 49);
+
+                            //Statusses
+                            gr.DrawImage(images[mon.fntStatus], k + 72, 32);
+                            gr.DrawImage(images[mon.pkrsStatus], k + 93, 32);
+                            gr.DrawImage(images[mon.slpStatus], k + 72, 44);
+                            gr.DrawImage(images[mon.psnStatus], k + 93, 44);
+                            gr.DrawImage(images[mon.brnStatus], k + 72, 56);
+                            gr.DrawImage(images[mon.parStatus], k + 93, 56);
+                            gr.DrawImage(images[mon.frzStatus], k + 72, 68);
+
+                            //hpbar
+                            gr.DrawImage(images["BARhpGRAY"], k, 60, 70, 9);
+                            if (mon.curHP != 0)
+                            {
+                                double hpFract = (double)mon.curHP / (double)mon.maxHP;
+                                string hpColor = "GREEN";
+                                if (hpFract < 0.5)
+                                    hpColor = "YELLOW";
+                                if (hpFract < 0.25)
+                                    hpColor = "RED";
+                                gr.DrawImage(images["BARhp" + hpColor], k + 15, 60, (int)(56 * hpFract), 9);
+                            }
+                            gr.DrawImage(images["BAR"], k - 1, 60);
+
+                            //xp bar
+                            gr.DrawImage(images["BARexpBACK"], k + 16, 71);
+                            if (mon.expNeeded != 0)
+                                gr.DrawImage(images["BARexpBLUE"], k + 16, 71, (float)((double)mon.currentEXP / (double)mon.expNeeded) * 48, 4);
+                            gr.DrawImage(images["BARexpFRAME"], k, 70);
+                        } //end of the if
+                    }//end of the forloop
+
+                    lastGraphics = gr;
+                }
+            }
+            catch (Exception exc)
+            {
+                File.Copy(settings["textFilePath"], "pokestatsSOURCEOFPROBLEM.txt");
+                File.WriteAllText("error.txt", "Error occured when drawing new screen: "+exc.Message);
             }
         }
 
