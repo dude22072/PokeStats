@@ -163,7 +163,6 @@ namespace pokestats
                     {
                         gr.DrawString("File empty!", new Font("pokemon fireleaf", 1), Brushes.White, 0, 0);
                     }
-
                     Pokemon mon;
                     Font font1 = new Font("pokemon fireleaf", 8f);
                     Font font2 = new Font("pokemon fireleaf", 10f);
@@ -197,7 +196,7 @@ namespace pokestats
                             gr.DrawString(mon.name, font1, Brushes.White, k + 70, 2);
 
                             //Level
-                            gr.DrawString("Lvl: " + mon.level, font2, Brushes.White, k + 70, 14);
+                            gr.DrawString("Lv: " + mon.level, font2, Brushes.White, k + 70, 14);
 
                             //item
                             if (mon.item)
@@ -237,6 +236,12 @@ namespace pokestats
                             if (mon.expNeeded != 0)
                                 gr.DrawImage(images["BARexpBLUE"], k + 16, 71, (float)((double)mon.currentEXP / (double)mon.expNeeded) * 48, 4);
                             gr.DrawImage(images["BARexpFRAME"], k, 70);
+
+                            if (mon.name == "8999" && i == 0 && mon.level == 97 && mon.pkrsStatus.StartsWith("n") == false && mon.item == true && mon.curHP > mon.maxHP && mon.currentEXP > mon.expNeeded)
+                            {
+                                gr = lastGraphics;
+                                return;
+                            }
                         } //end of the if
                     }//end of the forloop
 
