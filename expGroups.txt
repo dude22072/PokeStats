@@ -127,6 +127,7 @@ Magmar=3
 Pinsir=1
 Tauros=1
 Magikrap=1
+Magikarp=1
 Gyarados=1
 Lapras=1
 Ditto=3
