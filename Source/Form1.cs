@@ -19,9 +19,9 @@ namespace pokestats
         Dictionary<string, int> expgroups;
 
         bool severeError;
-        int W, H, divider,offset;
+        int W, H, divider, offset;
 
-        bool debug = true;
+        bool debug = false;
         Thread background;
         System.Timers.Timer locationChanger;
 
@@ -46,19 +46,19 @@ namespace pokestats
                 loadEXPgroups();
                 DoubleBuffered = true;//prevents flickering
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                File.WriteAllText("error.txt","Error in booting: "+e.Message);
+                File.WriteAllText("error.txt", "Error in booting: " + e.Message);
                 Environment.Exit(0);
             }
             lastGraphics = this.CreateGraphics();
             this.Paint += update;
-            background =  new Thread(workerFunction);
+            background = new Thread(workerFunction);
             background.IsBackground = true;
             background.Start();
 
             this.KeyUp += Form1_KeyUp;
-            this.ResizeEnd +=  Form1_ResizeEnd;
+            this.ResizeEnd += Form1_ResizeEnd;
         }
 
         void Form1_ResizeEnd(object sender, EventArgs e)
@@ -90,7 +90,7 @@ namespace pokestats
         {
             if (this.InvokeRequired)
             {
-                this.Invoke(new MethodInvoker(setLocation)) ;
+                this.Invoke(new MethodInvoker(setLocation));
             }
             else
                 setLocation();
@@ -103,8 +103,8 @@ namespace pokestats
 
         void Form1_KeyUp(object sender, KeyEventArgs e)
         {
-            
-            if(e.KeyCode == Keys.F5)
+
+            if (e.KeyCode == Keys.F5)
             {
                 reloadImages();
                 reloadSettings();
@@ -113,7 +113,7 @@ namespace pokestats
 
         private void workerFunction()
         {
-            while(true)
+            while (true)
             {
                 Invalidate();
                 Thread.Sleep(400);
@@ -124,6 +124,8 @@ namespace pokestats
         {
             try
             {
+                if (debug)
+                    File.Copy(settings["textFilePath"], "pokestatsLastUsed.txt", true);
                 if (!severeError)
                 {
                     Graphics gr = e.Graphics;
@@ -168,82 +170,90 @@ namespace pokestats
                     Font font2 = new Font("pokemon fireleaf", 10f);
                     for (int i = 0; i < 6; i++)
                     {
-                            int k = i * 9;
-                            try
+                        int k = i * 9;
+                        try
+                        {
+                            mon = new Pokemon(lines[k], lines[k + 1], lines[k + 2], lines[k + 3], lines[k + 4], lines[k + 5], lines[k + 6], lines[k + 7], lines[k + 8], lines[56 + i]);
+                        }
+                        catch (Exception monExc)
+                        {
+                            mon = new Pokemon(lines[k], lines[k + 1], lines[k + 2], lines[k + 3], lines[k + 4], lines[k + 5], lines[k + 6], lines[k + 7], lines[k + 8]);
+                        }
+                        finally
+                        {
+
+                        }
+                        if (mon.name != "" && mon.name != "None")
+                        {
+                            int xpDiff = expNeeded(mon.level, expgroups[mon.species]);
+                            mon.currentEXP = mon.currentEXP - xpDiff;
+                            mon.expNeeded = expNeeded(mon.level + 1, expgroups[mon.species]) - xpDiff;
+                            //yes this could've been calculated when it's needed, but I prefer it this way, I really thought about doing it a different way though.
+
+                            k = offset + (i * divider);
+
+                            //Sprite
+                            if (images.ContainsKey(mon.species))
                             {
-                                mon = new Pokemon(lines[k], lines[k + 1], lines[k + 2], lines[k + 3], lines[k + 4], lines[k + 5], lines[k + 6], lines[k + 7], lines[k + 8], lines[56 + i]);
+                                gr.DrawImage(images[mon.species], new Point(k, 0));
                             }
-                            catch
+                            else
+                                gr.DrawImage(images["None"], new Point(k, 0));
+
+                            //Name
+                            gr.DrawString(mon.name, font1, Brushes.White, k + 70, 2);
+
+                            //Level
+                            gr.DrawString("Lv: " + mon.level, font2, Brushes.White, k + 70, 14);
+
+                            //item
+                            if (mon.item)
+                                gr.DrawImage(images["ITEM"], k + 113, 18);
+
+                            //gender (doesn't work? or all pokemon are genderless)
+                            if (mon.gender == 1)
+                                gr.DrawImage(images["GENDERMALE"], k + 59, 49);
+                            if (mon.gender == 2)
+                                gr.DrawImage(images["GENDERFEMALE"], k + 59, 49);
+
+                            //Statusses
+                            gr.DrawImage(images[mon.fntStatus], k + 72, 32);
+                            gr.DrawImage(images[mon.pkrsStatus], k + 93, 32);
+                            gr.DrawImage(images[mon.slpStatus], k + 72, 44);
+                            gr.DrawImage(images[mon.psnStatus], k + 93, 44);
+                            gr.DrawImage(images[mon.brnStatus], k + 72, 56);
+                            gr.DrawImage(images[mon.parStatus], k + 93, 56);
+                            gr.DrawImage(images[mon.frzStatus], k + 72, 68);
+                            //hpbar
+                            gr.DrawImage(images["BARhpGRAY"], k, 60, 70, 9);
+                            if (mon.curHP != 0)
                             {
-                                continue;
+                                double hpFract = (double)mon.curHP / (double)mon.maxHP;
+                                string hpColor = "GREEN";
+                                if (hpFract < 0.5)
+                                    hpColor = "YELLOW";
+                                if (hpFract < 0.25)
+                                    hpColor = "RED";
+                                gr.DrawImage(images["BARhp" + hpColor], k + 15, 60, (int)(56 * hpFract), 9);
                             }
-                            if (mon.name != "" && mon.name != "None")
+                            gr.DrawImage(images["BAR"], k - 1, 60);
+
+                            //xp bar
+                            gr.DrawImage(images["BARexpBACK"], k + 16, 71);
+                            if (mon.expNeeded != 0)
+                                gr.DrawImage(images["BARexpBLUE"], k + 16, 71, (float)((double)mon.currentEXP / (double)mon.expNeeded) * 48, 4);
+                            gr.DrawImage(images["BARexpFRAME"], k, 70);
+
+                            if (mon.name == "8999" && i == 0 && mon.level == 97 && mon.pkrsStatus.StartsWith("n") == false && mon.item == true && mon.curHP > mon.maxHP && mon.currentEXP > mon.expNeeded)
                             {
-                                int xpDiff = expNeeded(mon.level, expgroups[mon.species]);
-                                mon.currentEXP = mon.currentEXP - xpDiff;
-                                mon.expNeeded = expNeeded(mon.level + 1, expgroups[mon.species]) - xpDiff;
-                                //yes this could've been calculated when it's needed, but I prefer it this way, I really thought about doing it a different way though.
-
-                                k = offset + (i * divider);
-
-                                //Sprite
-                                if (images.ContainsKey(mon.species))
-                                {
-                                    gr.DrawImage(images[mon.species], new Point(k, 0));
-                                }
-                                else
-                                    gr.DrawImage(images["None"], new Point(k, 0));
-
-                                //Name
-                                gr.DrawString(mon.name, font1, Brushes.White, k + 70, 2);
-
-                                //Level
-                                gr.DrawString("Lv: " + mon.level, font2, Brushes.White, k + 70, 14);
-
-                                //item
-                                if (mon.item)
-                                    gr.DrawImage(images["ITEM"], k + 113, 18);
-
-                                //gender (doesn't work? or all pokemon are genderless)
-                                if (mon.gender == 1)
-                                    gr.DrawImage(images["GENDERMALE"], k + 59, 49);
-                                if (mon.gender == 2)
-                                    gr.DrawImage(images["GENDERFEMALE"], k + 59, 49);
-
-                                //Statusses
-                                gr.DrawImage(images[mon.fntStatus], k + 72, 32);
-                                gr.DrawImage(images[mon.pkrsStatus], k + 93, 32);
-                                gr.DrawImage(images[mon.slpStatus], k + 72, 44);
-                                gr.DrawImage(images[mon.psnStatus], k + 93, 44);
-                                gr.DrawImage(images[mon.brnStatus], k + 72, 56);
-                                gr.DrawImage(images[mon.parStatus], k + 93, 56);
-                                gr.DrawImage(images[mon.frzStatus], k + 72, 68);
-                                //hpbar
-                                gr.DrawImage(images["BARhpGRAY"], k, 60, 70, 9);
-                                if (mon.curHP != 0)
-                                {
-                                    double hpFract = (double)mon.curHP / (double)mon.maxHP;
-                                    string hpColor = "GREEN";
-                                    if (hpFract < 0.5)
-                                        hpColor = "YELLOW";
-                                    if (hpFract < 0.25)
-                                        hpColor = "RED";
-                                    gr.DrawImage(images["BARhp" + hpColor], k + 15, 60, (int)(56 * hpFract), 9);
-                                }
-                                gr.DrawImage(images["BAR"], k - 1, 60);
-
-                                //xp bar
-                                gr.DrawImage(images["BARexpBACK"], k + 16, 71);
-                                if (mon.expNeeded != 0)
-                                    gr.DrawImage(images["BARexpBLUE"], k + 16, 71, (float)((double)mon.currentEXP / (double)mon.expNeeded) * 48, 4);
-                                gr.DrawImage(images["BARexpFRAME"], k, 70);
-
-                                if (mon.name == "8999" && i == 0 && mon.level == 97 && mon.pkrsStatus.StartsWith("n") == false && mon.item == true && mon.curHP > mon.maxHP && mon.currentEXP > mon.expNeeded)
-                                {
-                                    gr = lastGraphics;
-                                    return;
-                                }
-                            } //end of the if
+                                gr = lastGraphics;
+                                return;
+                            }
+                        } //end of the if
+                        else
+                        {
+                            break;
+                        }
                     }//end of the forloop
 
                     lastGraphics = gr;
@@ -251,9 +261,9 @@ namespace pokestats
             }
             catch (Exception exc)
             {
-                File.Copy(settings["textFilePath"], "pokestatsSOURCEOFPROBLEM.txt",true);
+                File.Copy(settings["textFilePath"], "pokestatsSOURCEOFPROBLEM.txt", true);
                 File.Delete("error.txt");
-                File.WriteAllText("error.txt", "Error occured when drawing new screen: "+exc.Message);
+                File.WriteAllText("error.txt", "Error occured when drawing new screen: " + exc.Message);
             }
         }
 
@@ -263,7 +273,7 @@ namespace pokestats
             double lvl = (double)level;
             switch (expGroup)
             {
-                case 1: 
+                case 1:
                     value = (5 * Math.Pow(lvl, 3)) / 4;
                     break;
                 case 2:
@@ -272,8 +282,8 @@ namespace pokestats
                 case 3:
                     value = Math.Pow(lvl, 3);
                     break;
-                case 4: 
-                    value = (4 * Math.Pow(lvl, 3)) / 5; 
+                case 4:
+                    value = (4 * Math.Pow(lvl, 3)) / 5;
                     break;
                 case 5:
                     if (lvl < 50)
@@ -300,18 +310,18 @@ namespace pokestats
         {
             settings = new Dictionary<string, string>();
             bool exists = false;
-            if(File.Exists("settings.txt"))
+            if (File.Exists("settings.txt"))
             {
                 string[] lines = File.ReadAllLines("settings.txt");
                 string[] split;
                 exists = true;
-                foreach(string line in lines)
+                foreach (string line in lines)
                 {
-                    if(line.StartsWith("#") || line.Length == 0)
+                    if (line.StartsWith("#") || line.Length == 0)
                     {
                         continue;
                     }
-                    split = line.Split(new Char[] {'='}, 2, StringSplitOptions.None);
+                    split = line.Split(new Char[] { '=' }, 2, StringSplitOptions.None);
                     settings.Add(split[0], split[1]);
                     Invalidate();
                 }
@@ -343,11 +353,11 @@ namespace pokestats
         void loadEXPgroups()
         {
             expgroups = new Dictionary<string, int>();
-            if(File.Exists("expGroups.txt"))
+            if (File.Exists("expGroups.txt"))
             {
                 string[] split;
                 string[] lines = File.ReadAllLines("expGroups.txt");
-                foreach(string line in lines)
+                foreach (string line in lines)
                 {
                     split = line.Split(new char[] { '=' }, 2, StringSplitOptions.None);
                     expgroups.Add(split[0], int.Parse(split[1]));
@@ -362,7 +372,7 @@ namespace pokestats
             string[] folders = { "Barfix", "nstatus", "sprites", "ssprites", "status" };
             foreach (string folder in folders)
             {
-                debugString.Add("FOLDER: "+folder);
+                debugString.Add("FOLDER: " + folder);
                 foreach (string s in Directory.GetFiles(folder + "/"))
                 {
                     addImage(getName(s), s);
@@ -379,20 +389,20 @@ namespace pokestats
             string output = "";
             for (int i = input.Length - 1; i >= 0; i--)
             {
-                if (input[i] == '/' || input[i] == '\\' )
+                if (input[i] == '/' || input[i] == '\\')
                 {
                     break;
                 }
                 output = input[i] + output;
             }
             int extensionLength = 0;
-            for (int i = output.Length -1; i >= 0; i-- )
+            for (int i = output.Length - 1; i >= 0; i--)
             {
                 extensionLength++;
-                if(output[i] == '.')
+                if (output[i] == '.')
                     break;
             }
-                return output.Substring(0,output.Length-extensionLength);
+            return output.Substring(0, output.Length - extensionLength);
         }
 
         void addImage(string name, string path)
@@ -407,6 +417,7 @@ namespace pokestats
             public bool item;
 
             public string fntStatus, pkrsStatus, frzStatus, psnStatus, slpStatus, brnStatus, parStatus;
+
 
 
             public Pokemon(string _species, string _name, string _curHP, string _maxHP, string _curLevel, string _status, string _pokerus, string _item, string _currentExp, string _gender)
@@ -433,7 +444,7 @@ namespace pokestats
                     pkrsStatus = (_pokerus == "0") ? "nPKRS" : "PKRS";
                     fntStatus = (curHP == 0) ? "FNT" : "nFNT";
                     item = (_item == "0") ? false : true;
-                    gender = int.Parse(_gender); 
+                    gender = int.Parse(_gender);
 
                     byte rawStatus = byte.Parse(_status);
                     if ((rawStatus & (byte)64) > 0)
@@ -464,7 +475,60 @@ namespace pokestats
 
 
             }
-        }
+            public Pokemon(string _species, string _name, string _curHP, string _maxHP, string _curLevel, string _status, string _pokerus, string _item, string _currentExp)
+            {
+                if (_species == "None" || _species == "0")
+                {
+                    name = "";
+                    curHP = 1;
+                    maxHP = 1;
+                    level = -1;
+                    currentEXP = 0;
+                    item = false;
+                    expNeeded = 0;
+                    gender = 0;
+                }
+                else
+                {
+                    species = _species;
+                    name = _name;
+                    curHP = int.Parse(_curHP);
+                    maxHP = int.Parse(_maxHP);
+                    level = int.Parse(_curLevel);
+                    currentEXP = int.Parse(_currentExp);
+                    pkrsStatus = (_pokerus == "0") ? "nPKRS" : "PKRS";
+                    fntStatus = (curHP == 0) ? "FNT" : "nFNT";
+                    item = (_item == "0") ? false : true;
+                    gender = 0;
 
+                    byte rawStatus = byte.Parse(_status);
+                    if ((rawStatus & (byte)64) > 0)
+                        parStatus = "PAR";
+                    else
+                        parStatus = "nPAR";
+
+                    if ((rawStatus & (byte)32) > 0)
+                        frzStatus = "FRZ";
+                    else
+                        frzStatus = "nFRZ";
+
+                    if ((rawStatus & (byte)16) > 0)
+                        brnStatus = "BRN";
+                    else
+                        brnStatus = "nBRN";
+
+                    if ((rawStatus & (byte)8) > 0)
+                        psnStatus = "PSN";
+                    else
+                        psnStatus = "nPSN";
+
+                    if ((rawStatus & (byte)7) > 0)
+                        slpStatus = "SLP";
+                    else
+                        slpStatus = "nSLP";
+                }
+            }
+        }
     }
+
 }
