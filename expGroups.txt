@@ -248,5 +248,5 @@ Larvitar=1
 Pupitar=1
 Tyranitar=1
 Lugia=1
-Ho-oh=1
+Ho-Oh=1
 Celebi=2
