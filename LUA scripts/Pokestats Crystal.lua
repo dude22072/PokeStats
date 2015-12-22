@@ -1,11 +1,61 @@
-require("Pokestats_Config")
---
--- Pokémon Status Display LUA Script
--- for VBA-RR
--- To be used at http://www.twitch.tv/rngplayspokemon
--- Created by dude22072
--- http://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_data_structure_in_Generation_II
---
+local host, port = "127.0.0.1", 54545
+local socket = require("socket")
+local tcp = assert(socket.tcp())
+    tcp:connect(host, port)
+    tcp:settimeout(0)
+    print(tcp:getpeername())
+    
+    pointers = {}
+
+pointers.crystal = {}
+pointers.crystal.partyStart = 0xDCDF
+pointers.crystal.teamCount = 0xDCD7
+pointers.crystal.inBattleNickname = 0xC621
+pointers.crystal.partyNicknames = 0xDE41
+
+--Pokestats Include File
+function B(a)
+  return memory.readbyteunsigned(a)
+end
+
+function W(a)
+  return memory.readwordunsigned(a)
+end
+
+function D(a)
+  return memory.readdwordunsigned(a)
+end
+
+local function isempty(s)
+  return s == nil or s == ''
+end
+
+--Locals
+local team_count = pointers.crystal.teamCount
+local team = {}
+team[1] = {}
+team[2] = {}
+team[3] = {}
+team[4] = {}
+team[5] = {}
+team[6] = {}
+team[7] = {} --In-Battle Pokemon
+team[1].start = pointers.crystal.partyStart
+team[2].start=team[1].start+48
+team[3].start=team[1].start+96
+team[4].start=team[1].start+144
+team[5].start=team[1].start+192
+team[6].start=team[1].start+240
+team[1].startNick=pointers.crystal.partyNicknames
+team[2].startNick=team[1].startNick+0x0B
+team[3].startNick=team[1].startNick+0x16
+team[4].startNick=team[1].startNick+0x21
+team[5].startNick=team[1].startNick+0x2C
+team[6].startNick=team[1].startNick+0x37
+team[7].startNick=pointers.crystal.inBattleNickname
+
+for i=1,7 do team[i].nickname = {} end
+for i=1,6 do team[i].experience = {}; team[i].iv = {} end
 
 local pokemonSpeciesNames={
  "None",
@@ -174,73 +224,17 @@ local charMap={
  "'","Pk","Mn","-","","","?","!",".","&","é","→","▷","▶","▼","♂",
  "","×",".","/",",","♀","0","1","2","3","4","5","6","7","8","9"}
 --All Empty ""'s Are REQUIRED
-
---Locals
-local team_count = pointers.crystal.teamCount
-local team = {}
-team[1] = {}
-team[2] = {}
-team[3] = {}
-team[4] = {}
-team[5] = {}
-team[6] = {}
-team[7] = {} --In-Battle Pokemon
-team[1].start = pointers.crystal.partyStart
-team[2].start=team[1].start+48
-team[3].start=team[1].start+96
-team[4].start=team[1].start+144
-team[5].start=team[1].start+192
-team[6].start=team[1].start+240
-team[1].startNick=pointers.crystal.partyNicknames
-team[2].startNick=team[1].startNick+0x0B
-team[3].startNick=team[1].startNick+0x16
-team[4].startNick=team[1].startNick+0x21
-team[5].startNick=team[1].startNick+0x2C
-team[6].startNick=team[1].startNick+0x37
-team[7].startNick=pointers.crystal.inBattleNickname
-
-for i=1,7 do team[i].nickname = {} end
-for i=1,6 do team[i].experience = {}; team[i].iv = {} end
-
----File Output
-local file=io.open(textoutputpath, "w")
-local filecheck=io.read("*all")
-
-local function isempty(s)
-  return s == nil or s == ''
-end
-
--- timer for status updates (#frames)
+    
 local timer = 0;
+local timer_threshold = 180;
 
-function do_pokestats()
-    
-    
-    --shiny
-       wildIV = {}
-       wildIV.read1 = B(0xD20C)
-       wildIV.read2 = B(0xD20D)
-       wildIV.defense = bit.band(wildIV.read1, 0x0F)
-       wildIV.attack = bit.rshift(bit.band(wildIV.read1,0xF0), 4) 
-       wildIV.speed = bit.band(wildIV.read2, 0x0F)
-       wildIV.special = bit.rshift(bit.band(wildIV.read2,0xF0), 4) 
-       --print("ATK:"..wildIV.attack.." DEF:"..wildIV.defense.." SPD:"..wildIV.speed.." SPL:"..wildIV.special)
-       if B(0xD22D) == 0x01 then
-            if wildIV.special == 10 and wildIV.speed == 10 and wildIV.defense == 10 then
-                if wildIV.attack == 2 or wildIV.attack == 3 or wildIV.attack == 6 or wildIV.attack == 7 or wildIV.attack == 10 or wildIV.attack == 11 or wildIV.attack == 14 or wildIV.attack == 15 then
-                    gui.text(0,35,"shiny","yellow")
-                end
-            end
-        end
-  
-	timer = timer + 1
+while true do
+    timer = timer + 1
 	if timer >= timer_threshold then
-		timer = 0
-    -- if anything seems amiss, don't do an update:
-	--if checkImpossibleValues then
-	--	return
-	--end
-		if B(team_count) > 6 then return end
+        timer = 0
+        print("Timer elapsed!")
+        
+        if B(team_count) > 6 then return end
 		if isempty(pokemonSpeciesNames) then
 			pokemonSpeciesNames = "Loading..."
 		end
@@ -323,77 +317,61 @@ function do_pokestats()
                     end 
                 end 
             end
+            
+            local stringToSend = "POKESTATS:"
        
 		--File Output
-		if filecheck~=file then
-			file:close()
-			file=io.open(textoutputpath, "w+")
-			file:close()
-			file=io.open(textoutputpath, "w")
-			
 			for i=1, 6 do
                 if i <= B(team_count) then
                     if team[i].species >= 0 and team[i].species <= 411 then
-                        file:write(pokemonSpeciesNames[team[i].species+1].."\n")
+                        stringToSend = stringToSend..(pokemonSpeciesNames[team[i].species+1]..":")
                     end
                     for j=1,10 do
-                        file:write(charMap[team[i].nickname[j]+1])
+                        stringToSend = stringToSend..(charMap[team[i].nickname[j]+1])
                     end
-                    file:write("\n"..
-                        team[i].currentHP.."\n"..
-                        team[i].totalHP.."\n"..
-                        team[i].level.."\n"..
-                        team[i].status.."\n"..
-                        team[i].pokerus.."\n"..
-                        team[i].item.."\n"..
-                            team[i].experience[4].."\n")
+                    stringToSend = stringToSend..(":"..
+                        team[i].currentHP..":"..
+                        team[i].totalHP..":"..
+                        team[i].level..":"..
+                        team[i].status..":"..
+                        team[i].pokerus..":"..
+                        team[i].item..":"..
+                            team[i].experience[4]..":")
                 else
-                    file:write(pokemonSpeciesNames[1].."\n")
-                    file:write("None")
-                    file:write("\n"..
-                        "0" .."\n"..
-                        "0" .."\n"..
-                        "0" .."\n"..
-                        "0" .."\n"..
-                        "0".."\n"..
-                        "0".."\n"..
-                            "0".."\n")
+                    stringToSend = stringToSend..(pokemonSpeciesNames[1]..":")
+                    stringToSend = stringToSend..("None")
+                    stringToSend = stringToSend..(":"..
+                        "0" ..":"..
+                        "0" ..":"..
+                        "0" ..":"..
+                        "0" ..":"..
+                        "0"..":"..
+                        "0"..":"..
+                            "0"..":")
                 end
 			end
             
-            file:write("POKESTATS 3.0.0 STUFF\n")
+            --file:write("POKESTATS 3.0.0 STUFF\n")
             
             if charMap[team[7].nickname[1]+1] == "" then
-                file:write("NOBATTLE")
+                stringToSend = stringToSend..("NOBATTLE")
             else
                 for k=1,10 do
-                    file:write(charMap[team[7].nickname[k]+1])
+                    stringToSend = stringToSend..(charMap[team[7].nickname[k]+1])
                 end
             end
             for i=1,6 do
-                file:write("\n"..team[i].gender)
+                stringToSend = stringToSend..(":"..team[i].gender)
             end
             for i=1,6 do
-                file:write("\n"..team[i].isShiny)
+                stringToSend = stringToSend..(":"..team[i].isShiny)
             end
-			file:flush()
-		elseif filecheck==file then
-			file:flush()
-		end
-	end
+            
+            stringToSend = stringToSend.."\n"
+            tcp:send(stringToSend)
+        
+	--end
+    end
+    emu.frameadvance();
 end
 
-function checkImpossibleValues()
-	partyCount = B(team_count)
-	partyByte1 = B(team[1].start)
-	if partyCount > 6 
-	or partyByte1 == 255
---	or b
---	or c
---	or d
-	then
-		return true
-	end
-end
-
---gui.register(do_pokestats)

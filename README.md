@@ -1,4 +1,4 @@
 # PokeStats
-To use the LUA script, make another script that imports the pokestats lua and calls do_pokestats() every frame  
+Run the display before running the script inside the emulator.  
   
 Writen using Love2D

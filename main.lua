@@ -1,12 +1,25 @@
 require("AnAL")
-require("pokestats-conf")
 require("pokestats_include")
+
+local host, port = "127.0.0.1", 54545
+local socket = require("socket")
+local tcp = assert(socket.tcp())
+    tcp:bind(host, port)
+    tcp:listen()
+    print("Socket Information :")
+    print(tcp:getsockname())
+    print(socket._VERSION)
+    print("Application will be frozen untill a connection is made.\n"..
+    "Application will also freeze if the connection is lost.\n"..
+    "Application will also freeze if the emulation is paused.")
+local client = tcp:accept()
+client:settimeout(0)
 
 math.randomseed(os.time())
 
 local shifter = 117 --The space between the starting of the pokemon info panels
+shinyDisplayStyle = 2 --0=Shiny Sprites, 1=Shiny Icon, 2=Both
 ---------------------------------------------------------------------------------------------------------------
-local file = nil
 local fileReader = {}
 imgEXPBarFrame = love.graphics.newImage('BarFix/BARexpFRAME.gif')
 imgEXPBarBlue = love.graphics.newImage('BarFix/BARexpBLUE.gif')
@@ -70,20 +83,18 @@ animationStuff = {}
 animationStuff[1] = "Kappa" --Animation.pokemonToAnimate
 animationStuff[2] = false -- Animation.hasPokemonAnimated
 
-
 function love.load(arg)
-    if CheckPath(pokestatsTextFilePath) == false then
-        error("ERROR:FILE NOT FOUND")
-    end
     love.graphics.setNewFont("pkmnfl.ttf", "12")
     print(os.time().." Loaded")
 end
 
 function love.update(dt)
-    file=io.open(pokestatsTextFilePath, "r")
-    if file~=nil then
-        local filecheck=file:read("*all")
-        fileReader = mysplit(filecheck, "\n")
+   local line, err = client:receive('*l', "POKESTATS:")
+    if not err then 
+    firstrun = mysplit(line, ":")
+    for I = 1,68 do
+        fileReader[I] = firstrun[(I+2)]
+    end
     
         animationStuff[1] = fileReader[56]
         if animationStuff[1] == "NOBATTLE" or animationStuff[1] ~= animationStuff[3] then
@@ -92,11 +103,10 @@ function love.update(dt)
         
         pokemon[0] = fileReader[1]
         if pokemon[0] ~= "None" then
-    
-        
             for I=0,5 do
                 pokemon[I] = fileReader[1+(I*9)]
                 if pokemon[I] ~= "None" and pokemon[I] ~= "0" and pokemon[I] ~= nil then
+                    local spritePath = ""
                     if tonumber(pokemonIsShiny[I]) == 1 and shinyDisplayStyle ~= 1 then
                         pokemonIMG[I] = love.graphics.newImage('ssprites/'..pokemon[I]..'.png')
                     else
@@ -151,6 +161,15 @@ function love.update(dt)
                     end
                 end]]-- -- animations disabled
             end
+        end
+    
+    else
+        if err ~= "timeout" and err ~= "closed" then
+            print(err)
+        end
+        if err == "closed" then
+            print("Connection closed! Retrying!\nApplication WILL FREEZE until a new connection is made!");
+            client = tcp:accept()
         end
     end
 end
@@ -289,11 +308,6 @@ function expNeeded(curLevel,expGroup)
     end
 end
 
-function CheckPath(name)
-   local f=io.open(name,"r")
-   if f~=nil then io.close(f) return true else return false end
-end
-
 function mysplit(inputstr, sep)
         if sep == nil then
                 sep = "%s"
@@ -308,8 +322,4 @@ end
 
 function map(x,in_min,in_max,out_min,out_max)
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
-end
-
-function getFrames(species)
-    return frameCount[species]
 end
