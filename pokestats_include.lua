@@ -248,7 +248,7 @@ expGroup["Larvitar"] = 1
 expGroup["Pupitar"] = 1
 expGroup["Tyranitar"] = 1
 expGroup["Lugia"] = 1
-expGroup["Ho-oh"] = 1
+expGroup["Ho-Oh"] = 1
 expGroup["Celebi"] = 2
 
 frameCount = {}
