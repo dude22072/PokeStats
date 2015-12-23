@@ -1,6 +1,9 @@
 require("AnAL")
 require("pokestats_include")
 
+local shifter = 117 --The space between the starting of the pokemon info panels
+shinyDisplayStyle = 2 --0=Shiny Sprites, 1=Shiny Icon, 2=Both
+---------------------------------------------------------------------------------------------------------------
 local host, port = "127.0.0.1", 54545
 local socket = require("socket")
 local tcp = assert(socket.tcp())
@@ -16,10 +19,6 @@ local client = tcp:accept()
 client:settimeout(0)
 
 math.randomseed(os.time())
-
-local shifter = 117 --The space between the starting of the pokemon info panels
-shinyDisplayStyle = 2 --0=Shiny Sprites, 1=Shiny Icon, 2=Both
----------------------------------------------------------------------------------------------------------------
 local fileReader = {}
 imgEXPBarFrame = love.graphics.newImage('BarFix/BARexpFRAME.gif')
 imgEXPBarBlue = love.graphics.newImage('BarFix/BARexpBLUE.gif')

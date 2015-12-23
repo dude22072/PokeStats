@@ -1,18 +1,22 @@
+--The key to toggle if the debug display is shown
+displayKey = "U" 
+--Moves the debug screen to the next pokemon
+nextPokemonKey = "T" 
+-- Moves the debug screen to the previous pokemon
+previousPokemonKey="R" 
+--Weather the debug screen should be show at startup or not
+local debugscreenbool = false 
+
+----------------------------------------------------------------------------------------------
+
+--TCP stuff
 local host, port = "127.0.0.1", 54545
 local socket = require("socket")
 local tcp = assert(socket.tcp())
-    tcp:connect(host, port)
-    tcp:settimeout(0)
-    print(tcp:getpeername())
+tcp:connect(host, port)
+tcp:settimeout(0)
+print(tcp:getpeername())
     
-    pointers = {}
-
-pointers.crystal = {}
-pointers.crystal.partyStart = 0xDCDF
-pointers.crystal.teamCount = 0xDCD7
-pointers.crystal.inBattleNickname = 0xC621
-pointers.crystal.partyNicknames = 0xDE41
-
 --Pokestats Include File
 function B(a)
   return memory.readbyteunsigned(a)
@@ -31,7 +35,7 @@ local function isempty(s)
 end
 
 --Locals
-local team_count = pointers.crystal.teamCount
+local team_count = 0xDCD7
 local team = {}
 team[1] = {}
 team[2] = {}
@@ -40,19 +44,20 @@ team[4] = {}
 team[5] = {}
 team[6] = {}
 team[7] = {} --In-Battle Pokemon
-team[1].start = pointers.crystal.partyStart
+team[1].start = 0xDCDF
 team[2].start=team[1].start+48
 team[3].start=team[1].start+96
 team[4].start=team[1].start+144
 team[5].start=team[1].start+192
 team[6].start=team[1].start+240
-team[1].startNick=pointers.crystal.partyNicknames
+team[1].startNick=0xDE41
 team[2].startNick=team[1].startNick+0x0B
 team[3].startNick=team[1].startNick+0x16
 team[4].startNick=team[1].startNick+0x21
 team[5].startNick=team[1].startNick+0x2C
 team[6].startNick=team[1].startNick+0x37
-team[7].startNick=pointers.crystal.inBattleNickname
+team[7].startNick=0xC621
+local debugsubmode = 0
 
 for i=1,7 do team[i].nickname = {} end
 for i=1,6 do team[i].experience = {}; team[i].iv = {} end
@@ -228,11 +233,146 @@ local charMap={
 local timer = 0;
 local timer_threshold = 180;
 
-while true do
+local xfix = 10
+local yfix = 10
+function displaybox(a,b,c,d,e,f)
+	gui.box(a+xfix,b+yfix,c+xfix,d+yfix,e,f)
+end
+
+function display(a,b,c,d)
+	gui.text(xfix+a,yfix+b,c, d)
+end
+
+function debugScreen()
+    i = debugsubmode + 1
+    
+    -- Display data
+	displaybox(-5,-5,148,133,"#000000A0", "white")
+    display(0,0,"dude22072's PokeStats Script (DEBUG)","white")
+	display(0,8, "Crystal", "white")
+    display(0,15,"Slot:","White")
+    display(80,15,i,"White")
+    if i > B(team_count) then
+    
+    else
+	if pokemonID == -1 then
+		display(55,30, "Invalid Pokemon Data", "red")
+	else
+		--[[if isegg == 1 then
+			display(0,25, "Pokemon: " .. pokemonSpeciesNames[team[i].species + 1] .. " egg", "yellow")
+		else]]
+			display(0,25, "Pokemon: " .. pokemonSpeciesNames[team[i].species + 1], "yellow")
+		--end
+        display(0,35,"Nickname: ", "yellow")
+        for j=1,10 do
+            display(50 + (j*5),35,(charMap[team[i].nickname[j]+1]), "yellow")
+		end
+        
+		display(0,55, "Item: ", "white")
+        display(80,55,team[i].item,"white")
+		display(0,65, "Level: ", "green")
+        display(80,65, team[i].level, "green")
+        display(0,75, "HP: ", "green")
+        
+        if tonumber(team[i].currentHP) > 0 then
+            if team[i].totalHP >= 100 then
+                if team[i].currentHP >= 100 then
+                    display(44,75, team[i].currentHP.."/"..team[i].totalHP, "green")
+                else 
+                    if team[i].currentHP >= 10 then
+                        display(50,75, team[i].currentHP.."/"..team[i].totalHP, "green")
+                    else
+                        display(56,75, team[i].currentHP.."/"..team[i].totalHP, "green")
+                    end
+                end
+            else 
+                if team[i].totalHP >= 10 then
+                    if team[i].currentHP >= 10 then
+                        display(56,75, team[i].currentHP.."/"..team[i].totalHP, "green")
+                    else
+                        display(62,75, team[i].currentHP.."/"..team[i].totalHP, "green")
+                    end
+                else
+                    display(68,75, team[i].currentHP.."/"..team[i].totalHP, "green")
+                end
+            end
+        else
+            if team[i].totalHP >= 100 then
+                display(56,65, team[i].currentHP.."/"..team[i].totalHP, "red")
+            else
+                if team[i].totalHP >= 10 then
+                    display(62,75, team[i].currentHP.."/"..team[i].totalHP, "red")
+                else
+                    display(68,75, team[i].currentHP.."/"..team[i].totalHP, "red")
+                end
+            end
+        end
+        
+        display(0,85, "EXP:", "blue")
+        display(25,85,team[i].experience[4],"blue")
+        
+		--[[if pkrs == 0 then
+			display(0,95, "PKRS:       no", "red")
+		else
+			display(0,95, "PKRS: yes (" .. team[i].pokerus .. ")", "red")
+		end]]
+        display(0,95, "PKRS:Unimplemented", "red")
+        display(0,45, "Gender:", "green")
+        --[[if team[i].gender == 0 then
+            display(60,45, "Genderless", "green")
+        elseif team[i].gender == 1 then
+            display(60,45, "Male", "blue")
+        elseif team[i].gender == 2 then
+            display(60,45, "Female", "red")
+        end]]
+        display(60,45, "Unimplemented", "red")
+	end
+    end
+    
+    --Controls
+    display(0,105,previousPokemonKey.."/"..nextPokemonKey..": Change Pokemon","orange")
+    display(0,115,displayKey..": Show/Hide Display","orange")
+    
+end
+
+function menu()
+    local submodemax = 5
+	tabl = input.get()
+    if tabl[displayKey] and not prev[displayKey] then
+        if debugscreenbool == true then
+            debugscreenbool = false
+        else
+            debugscreenbool = true
+        end
+    end
+	if tabl[previousPokemonKey] and not prev[previousPokemonKey] then
+		debugsubmode = debugsubmode - 1
+		if debugsubmode < 0 then
+			debugsubmode = submodemax
+		end
+	end
+	if tabl[nextPokemonKey] and not prev[nextPokemonKey] then
+		debugsubmode = debugsubmode + 1
+		if debugsubmode == submodemax + 1 then
+			debugsubmode = 0
+		end
+	end
+    
+    if tabl[textOutputKey] and not prev[textOutputKey] then
+		if textoutputbool == true then
+            textoutputbool = false
+        else
+            textoutputbool = true
+        end
+	end
+	prev = tabl
+end
+
+function do_pokestats()
     timer = timer + 1
 	if timer >= timer_threshold then
         timer = 0
-        print("Timer elapsed!")
+        --print("Timer elapsed!")
         
         if B(team_count) > 6 then return end
 		if isempty(pokemonSpeciesNames) then
@@ -370,8 +510,16 @@ while true do
             stringToSend = stringToSend.."\n"
             tcp:send(stringToSend)
         
-	--end
     end
-    emu.frameadvance();
+    
+    if debugscreenbool == true then
+        if team[1].species ~= nil then
+            debugScreen()
+        end
+    end
+        
+    menu()
 end
+
+gui.register(do_pokestats)
 
