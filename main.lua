@@ -91,8 +91,14 @@ function love.update(dt)
    local line, err = client:receive('*l', "POKESTATS:")
     if not err then 
     firstrun = mysplit(line, ":")
-    for I = 1,68 do
-        fileReader[I] = firstrun[(I+2)]
+    if firstrun[2] == "POKESTATS" then
+        for I = 1,68 do
+            fileReader[I] = firstrun[(I+2)]
+        end
+    else
+        for I = 1,68 do
+            fileReader[I] = firstrun[(I+1)]
+        end
     end
     
         animationStuff[1] = fileReader[56]
