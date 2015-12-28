@@ -90,6 +90,7 @@ end
 function love.update(dt)
    local line, err = client:receive('*l', "POKESTATS:")
     if not err then 
+    --print("Data is "..line)
     firstrun = mysplit(line, ":")
     if firstrun[2] == "POKESTATS" then
         for I = 1,68 do
@@ -140,8 +141,8 @@ function love.update(dt)
                     pokemonEXPDif[I] = expNeeded(pokemonLevel[I], pokemonEXPGroup[I])
                     pokemonCurEXP[I] = pokemonCurEXP[I] - pokemonEXPDif[I]
                     pokemonMaxEXP[I] = (expNeeded((pokemonLevel[I] + 1), pokemonEXPGroup[I])) - pokemonEXPDif[I]
-                    pokemonGender[I] = fileReader[57+(1*I)]
-                    pokemonIsShiny[I] = fileReader[63+(1*I)]
+                    pokemonGender[I] = tonumber(fileReader[56+(1*I)])
+                    pokemonIsShiny[I] = fileReader[62+(1*I)]
                 else
                     pokemonNickname[I] = ""
                     pokemonHP[I] = 0

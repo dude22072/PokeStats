@@ -566,7 +566,7 @@ function do_pokestats()
                         experience..":")
                 
                 else
-                 stringToSend = stringToSend..("None\nNone")
+                 stringToSend = stringToSend..("None:None")
                      stringToSend = stringToSend..(":"..
                         "0" ..":"..
                         "0" ..":"..
