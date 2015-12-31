@@ -1,5 +1,6 @@
 --Joseph Keller's Pokemon Gen4/5 PokeStats Display LUA script
 --Based of a lua script by MKDasher
+--Requires display 4.0.1 or higher.
 
 require "Pokestats Gen 4 and 5 - Include"
 

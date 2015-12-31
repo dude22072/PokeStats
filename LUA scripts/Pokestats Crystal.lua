@@ -1,3 +1,8 @@
+--Joseph Keller's Pokemon Crystal PokeStats Display LUA script
+--Requires display 4.0.0 or higher.
+
+----------------------------------------------------------------------------------------------
+
 --The key to toggle if the debug display is shown
 displayKey = "U" 
 --Moves the debug screen to the next pokemon

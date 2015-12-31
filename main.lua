@@ -186,6 +186,12 @@ function love.draw(dt)
                 drawPokemon(I)
             end
     end
+    if love.window.hasFocus() then
+        love.graphics.setColor(love.graphics.getBackgroundColor())
+        love.graphics.rectangle("fill", 0, 5, 300, 15)
+        love.graphics.setColor(255,255,255,255)
+        love.graphics.print("Pokestats Status Display - Created by dude22072", 0, 10)
+    end
 end
 
 function drawPokemon(I)
