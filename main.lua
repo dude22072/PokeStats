@@ -113,10 +113,18 @@ function love.update(dt)
                 pokemon[I] = fileReader[1+(I*9)]
                 if pokemon[I] ~= "None" and pokemon[I] ~= "0" and pokemon[I] ~= nil then
                     local spritePath = ""
-                    if tonumber(pokemonIsShiny[I]) == 1 and shinyDisplayStyle ~= 1 then
-                        pokemonIMG[I] = love.graphics.newImage('ssprites/'..pokemon[I]..'.png')
+                    if tonumber(pokemonGender[I])==2 and checkFile('sprites/'..pokemon[I]..'-f.png') then
+                        if tonumber(pokemonIsShiny[I]) == 1 and shinyDisplayStyle ~= 1 then
+                            pokemonIMG[I] = love.graphics.newImage('ssprites/'..pokemon[I]..'-f.png')
+                        else
+                            pokemonIMG[I] = love.graphics.newImage('sprites/'..pokemon[I]..'-f.png')
+                        end
                     else
-                        pokemonIMG[I] = love.graphics.newImage('sprites/'..pokemon[I]..'.png')
+                        if tonumber(pokemonIsShiny[I]) == 1 and shinyDisplayStyle ~= 1 then
+                            pokemonIMG[I] = love.graphics.newImage('ssprites/'..pokemon[I]..'.png')
+                        else
+                            pokemonIMG[I] = love.graphics.newImage('sprites/'..pokemon[I]..'.png')
+                        end
                     end
                     pokemonNickname[I] = fileReader[2+(I*9)]
                     --[[if pokemonNickname[I] == animationStuff[1] then
@@ -334,4 +342,9 @@ end
 
 function map(x,in_min,in_max,out_min,out_max)
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+end
+
+function checkFile(name)
+   local f=io.open(name,"r")
+   if f~=nil then io.close(f) return true else return false end
 end
