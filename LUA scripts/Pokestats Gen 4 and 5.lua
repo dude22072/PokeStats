@@ -350,7 +350,8 @@ function read_adressess()
 	
 	-- Current stats
 	prng = pid
-	prng = mult32(prng,0x41C64E6D) + 0x6073
+    prng = mult32(prng,0x41C64E6D) + 0x6073
+    statusConditions = getbits(bxr(memory.readbyte(pidAddr + 0x88), gettop(prng)),0,8)
 	prng = mult32(prng,0x41C64E6D) + 0x6073
 	prng = mult32(prng,0x41C64E6D) + 0x6073
 	level = getbits(bxr(memory.readword(pidAddr + 0x8C), gettop(prng)),0,8)
@@ -455,6 +456,8 @@ function debugScreen()
         elseif gender == 2 then
             display(155,25, "Female", "red")
         end
+        display(110,45,"STATUS:", "white")
+        display(155,45,statusConditions,"white")
         
 	end
     
@@ -561,7 +564,7 @@ function do_pokestats()
                     hpstat..":"..
                     maxhpstat..":"..
                     level..":"..
-                    "0:"..--team[i].status..":"..
+                    statusConditions..":"..--team[i].status..":"..
                     pkrs..":"..
                     heldItem..":"..
                         experience..":")
