@@ -144,10 +144,10 @@ function love.update(dt)
                     pokemonStatus[I] = fileReader[6+(I*9)]
                     pokemonPKRS[I] = fileReader[7+(I*9)]
                     pokemonItem[I] = fileReader[8+(I*9)]
-                    pokemonCurEXP[I] = fileReader[9+(I*9)]
+                    pokemonCurEXP[I] = tonumber(fileReader[9+(I*9)])
                     pokemonEXPGroup[I] = expGroup[pokemon[I]]
                     pokemonEXPDif[I] = expNeeded(pokemonLevel[I], pokemonEXPGroup[I])
-                    pokemonCurEXP[I] = pokemonCurEXP[I] - pokemonEXPDif[I]
+                    pokemonCurEXP[I] = tonumber(pokemonCurEXP[I]) - tonumber(pokemonEXPDif[I])
                     pokemonMaxEXP[I] = (expNeeded((pokemonLevel[I] + 1), pokemonEXPGroup[I])) - pokemonEXPDif[I]
                     pokemonGender[I] = tonumber(fileReader[56+(1*I)])
                     pokemonIsShiny[I] = fileReader[62+(1*I)]
