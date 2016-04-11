@@ -86,7 +86,7 @@ local pokemonSpeciesNames={
  "Vulpix","Ninetales",
  "Jigglypuff","Wigglytuff",
  "Zubat","Golbat",
- "Odish","Gloom","Vileplume",
+ "Oddish","Gloom","Vileplume",
  "Paras","Parasect",
  "Venonat","Venomoth",
  "Diglet","Dugtrio",
