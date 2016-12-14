@@ -50,6 +50,7 @@ imgGender = {}
     imgGender.female = love.graphics.newImage('status/GENDERFEMALE.gif')
 imgShiny = love.graphics.newImage('status/SHINY.gif')
 pokemon = {}
+previousPokemon = {}
 pokemonIMG = {}
 pokemonIMGANI = {}
 pokemonAnimation = {}
@@ -110,8 +111,10 @@ function love.update(dt)
         pokemon[0] = fileReader[1]
         if pokemon[0] ~= "None" then
             for I=0,5 do
+                
                 pokemon[I] = fileReader[1+(I*9)]
                 if pokemon[I] ~= "None" and pokemon[I] ~= "0" and pokemon[I] ~= nil then
+                    if pokemonExists(pokemon[I]) ~= true then pokemon[I] = previousPokemon[I];break; else previousPokemon[I] = pokemon[I] end
                     local spritePath = ""
                     if tonumber(pokemonGender[I])==2 and checkFile('sprites/'..pokemon[I]..'-f.png') then
                         if tonumber(pokemonIsShiny[I]) == 1 and shinyDisplayStyle ~= 1 then
@@ -348,3 +351,16 @@ function checkFile(name)
    local f=io.open(name,"r")
    if f~=nil then io.close(f) return true else return false end
 end
+
+function inTable(tbl, item)
+    for key, value in pairs(tbl) do
+        if value == item then return key end
+    end
+    return false
+end
+
+function pokemonExists(pkmn)
+    if inTable(pokemon, pkmn) == false then return false else return true end
+end
+
+
