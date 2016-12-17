@@ -211,60 +211,64 @@ end
 
 function drawPokemon(I)
 --Sprite and name and crap
+            local verticalShifter=0;
+            if I>2 then verticalShifter=86 end
+            --117
+            if I==0 or I==3 then shifter = 0 else if I==1 or I==2 then shifter = 117 else if I==4 then shifter = 29.25 else if I==5 then shifter = 46.8 end end end end
             if animatingSprite[I] == false then
-                love.graphics.draw(pokemonIMG[I], (I*shifter), 0)
+                love.graphics.draw(pokemonIMG[I], (I*shifter), 0+verticalShifter)
             else
-                --pokemonAnimation[I]:draw((I*shifter), 0) --animations disabled
+                --pokemonAnimation[I]:draw((I*shifter), 0+verticalShifter) --animations disabled
             end
-            love.graphics.print(pokemonNickname[I], 70+(I*shifter), 8)
-            love.graphics.print("Lvl: "..pokemonLevel[I], 70+(I*shifter), 21)
+            love.graphics.print(pokemonNickname[I], 70+(I*shifter), 8+verticalShifter)
+            love.graphics.print("Lvl: "..pokemonLevel[I], 70+(I*shifter), 21+verticalShifter)
             
             --if pokemonStatus[I] ~= "0" then
-            --   love.graphics.draw(imgStatus[statusname[pokemonStatus[I]+1]], 70+(I*shifter), 30)
+            --   love.graphics.draw(imgStatus[statusname[pokemonStatus[I]+1]], 70+(I*shifter), 30+verticalShifter)
             --end
 			
-			drawStatus(I * shifter + 72, 32, pokemonStatus[I], pokemonHP[I], pokemonPKRS[I])			
+			drawStatus(I * shifter + 72, 32+verticalShifter, pokemonStatus[I], pokemonHP[I], pokemonPKRS[I])			
             
             --if pokemonPKRS[I] ~= nil and pokemonPKRS[I] ~= "0" then
             --    love.graphics.draw(imgStatus.PKRS, 92+(I*shifter), 30)
             --end
             
             if pokemonItem[I] ~= nil and pokemonItem[I] ~= "0" then
-                love.graphics.draw(imgStatus.ITEM, 113+(I*shifter), 18)
-                --love.graphics.print(pokemonItem[I], 80+(I*shifter), 45)
+                love.graphics.draw(imgStatus.ITEM, 113+(I*shifter), 18+verticalShifter)
+                --love.graphics.print(pokemonItem[I], 80+(I*shifter), 45+verticalShifter)
             end
             
             --Gender
             if tonumber(pokemonGender[I]) == 1 then
-                love.graphics.draw(imgGender.male, 59+(I*shifter), 49)
+                love.graphics.draw(imgGender.male, 59+(I*shifter), 49+verticalShifter)
             elseif tonumber(pokemonGender[I]) == 2 then
-                love.graphics.draw(imgGender.female, 59+(I*shifter), 49)
+                love.graphics.draw(imgGender.female, 59+(I*shifter), 49+verticalShifter)
             end
             
             --Shiny Icon
             if tonumber(pokemonIsShiny[I]) == 1 and shinyDisplayStyle ~= 0 then
-                love.graphics.draw(imgShiny, 57+(I*shifter), 4)
+                love.graphics.draw(imgShiny, 57+(I*shifter), 4+verticalShifter)
             end
             
             --HP Bar
             hpGreyQuad[I] = love.graphics.newQuad(0, 0, 55, 4, imgHPBarGrey:getDimensions())
-            love.graphics.draw(imgHPBarGrey, hpGreyQuad[I], 16+(I*shifter), 62)
+            love.graphics.draw(imgHPBarGrey, hpGreyQuad[I], 16+(I*shifter), 62+verticalShifter)
             hpQuads[I] = love.graphics.newQuad(0, 0, map(pokemonHP[I], 0, pokemonHPMax[I], 0, 55), 4, imgHPBarGrey:getDimensions())
             if tonumber(pokemonHP[I]) <= (tonumber(pokemonHPMax[I])/4) then
-                love.graphics.draw(imgHPBarRed, hpQuads[I], 15+(I*shifter), 62)
+                love.graphics.draw(imgHPBarRed, hpQuads[I], 15+(I*shifter), 62+verticalShifter)
             elseif tonumber(pokemonHP[I]) <= (tonumber(pokemonHPMax[I])/2) then
-                love.graphics.draw(imgHPBarYellow, hpQuads[I], 15+(I*shifter), 62)
+                love.graphics.draw(imgHPBarYellow, hpQuads[I], 15+(I*shifter), 62+verticalShifter)
             else
-                love.graphics.draw(imgHPBarGreen, hpQuads[I], 15+(I*shifter), 62)
+                love.graphics.draw(imgHPBarGreen, hpQuads[I], 15+(I*shifter), 62+verticalShifter)
             end
             
-            love.graphics.draw(imgHPBarFrame, (0+(I*shifter))-1, 60)
+            love.graphics.draw(imgHPBarFrame, (0+(I*shifter))-1, 60+verticalShifter)
             
             --EXP Bar
-            love.graphics.draw(imgEXPBarBack, 16+(I*shifter), 71)
+            love.graphics.draw(imgEXPBarBack, 16+(I*shifter), 71+verticalShifter)
             expQuads[I] = love.graphics.newQuad(0, 0, map(pokemonCurEXP[I], 0, pokemonMaxEXP[I], 0, 48), 4, imgEXPBarFrame:getDimensions())
-            love.graphics.draw(imgEXPBarBlue, expQuads[I], 16+(I*shifter), 71)
-            love.graphics.draw(imgEXPBarFrame, 0+(I*shifter), 70)
+            love.graphics.draw(imgEXPBarBlue, expQuads[I], 16+(I*shifter), 71+verticalShifter)
+            love.graphics.draw(imgEXPBarFrame, 0+(I*shifter), 70+verticalShifter)
 end
 
 function drawStatus(x,y,statusFlagsIn,HP,hasPKRS)
