@@ -1300,7 +1300,7 @@ frameCount["Keldeo"] = 0
 frameCount["Meloetta"] = 0
 frameCount["Genesect"] = 0
 
-pokemon =  {"None", "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard",
+pokemonNames =  {"None", "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard",
 			"Squirtle", "Wartortle", "Blastoise", "Caterpie", "Metapod", "Butterfree",
 			"Weedle", "Kakuna", "Beedrill", "Pidgey", "Pidgeotto", "Pidgeot", "Rattata", "Raticate",
 			"Spearow", "Fearow", "Ekans", "Arbok", "Pikachu", "Raichu", "Sandshrew", "Sandslash",

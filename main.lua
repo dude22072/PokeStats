@@ -125,7 +125,6 @@ function love.update(dt)
                             animationStuff[3] = animationStuff[1]
                         end
                     end]]-- --animations disabled
-                    
                     pokemonHP[I] = fileReader[3+(I*9)]
                     pokemonHPMax[I] = fileReader[4+(I*9)]
                     pokemonLevel[I] = fileReader[5+(I*9)]
@@ -197,6 +196,7 @@ end
 
 function love.draw(dt)
     for I=0,5 do
+            --print(I)
             if pokemon[I] ~= nil and pokemon[I] ~= "None" and pokemon[I] ~= "0" then
                 drawPokemon(I)
             end
@@ -371,7 +371,7 @@ function inTable(tbl, item)
 end
 
 function pokemonExists(pkmn)
-    if inTable(pokemon, pkmn) == false then return false else return true end
+    if inTable(pokemonNames, pkmn) == false then return false else return true end
 end
 
 
