@@ -1,7 +1,7 @@
 require("AnAL")
 require("pokestats_include")
 
-local shifter = 117 --The space between the starting of the pokemon info panels
+local shifter = 119 --The space between the starting of the pokemon info panels
 shinyDisplayStyle = 2 --0=Shiny Sprites, 1=Shiny Icon, 2=Both
 ---------------------------------------------------------------------------------------------------------------
 local host, port = "127.0.0.1", 54545

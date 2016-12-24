@@ -1,5 +1,5 @@
 --Joseph Keller's Pokemon FireRed PokeStats Display LUA script
---Requires display 4.1.0 or higher.
+--Requires display 4.1.3 or higher.
 
 ----------------------------------------------------------------------------------------------
 
