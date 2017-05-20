@@ -1,5 +1,5 @@
 --Joseph Keller's Pokemon FireRed PokeStats Display LUA script
---Requires display 4.1.3 or higher.
+--Requires display 4.1.0 or higher.
 
 ----------------------------------------------------------------------------------------------
 
@@ -78,7 +78,7 @@ local pokemonSpeciesNames={
  "Seel","Dewgong",
  "Grimer","Muk",
  "Shelder","Cloyster",
- "Ghastly","Haunter","Gengar",
+ "Gastly","Haunter","Gengar",
  "Onix",
  "Drowzee","Hypno",
  "Krabby","Kingler",
@@ -102,7 +102,7 @@ local pokemonSpeciesNames={
  "Magmar",
  "Pinsir",
  "Tauros",
- "Magikrap","Gyarados",
+ "Magikarp","Gyarados",
  "Lapras",
  "Ditto",
  "Eevee","Vaporeon","Jolteon","Flareon",
@@ -232,7 +232,7 @@ local pokemonSpeciesNames={
  "Slakoth","Vigoroth","Slaking",
  "Gulpin","Swalot",
  "Tropius",
- "Whishmur","Loudred","Exploud",
+ "Whismur","Loudred","Exploud",
  "Clamperl","Huntail","Gorebyss",
  "Absol",
  "Shuppet","Banette",
