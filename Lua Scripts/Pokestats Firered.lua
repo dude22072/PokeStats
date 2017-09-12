@@ -291,6 +291,7 @@ team[3].start=team[1].start+200
 team[4].start=team[1].start+300
 team[5].start=team[1].start+400
 team[6].start=team[1].start+500
+local debugsubmode = 0
 for i=1,6 do team[i].nickname = {} end
 local growthData = 0
 ---File Output
@@ -306,6 +307,141 @@ end
 -- timer for status updates (#frames)
 local timer = 0;
 local timer_threshold = 180;
+
+local xfix = 10
+local yfix = 10
+function displaybox(a,b,c,d,e,f)
+	gui.box(a+xfix,b+yfix,c+xfix,d+yfix,e,f)
+end
+
+function display(a,b,c,d)
+	gui.text(xfix+a,yfix+b,c, d)
+end
+
+function debugScreen()
+    i = debugsubmode + 1
+    
+    -- Display data
+	displaybox(-5,-5,148,133,"#000000A0", "white")
+    display(0,0,"dude22072's PokeStats Script (DEBUG)","white")
+	display(0,8, "Crystal", "white")
+    display(0,15,"Slot:","White")
+    display(80,15,i,"White")
+    --if i > memory.readbyteunsigned(team_count) then
+    
+    --else
+	if pokemonID == -1 then
+		display(55,30, "Invalid Pokemon Data", "red")
+	else
+		--[[if isegg == 1 then
+			display(0,25, "Pokemon: " .. pokemonSpeciesNames[team[i].species + 1] .. " egg", "yellow")
+		else]]
+			display(0,25, "Pokemon: " .. pokemonSpeciesNames[team[i].species + 1], "yellow")
+		--end
+        display(0,35,"Nickname: ", "yellow")
+        for j=1,10 do
+            display(50 + (j*5),35,(charMap[team[i].nickname[j]+1]), "yellow")
+		end
+        
+		display(0,55, "Item: ", "white")
+        display(80,55,team[i].item,"white")
+		display(0,65, "Level: ", "green")
+        display(80,65, team[i].level, "green")
+        display(0,75, "HP: ", "green")
+        
+        if tonumber(team[i].currentHP) > 0 then
+            if team[i].totalHP >= 100 then
+                if team[i].currentHP >= 100 then
+                    display(44,75, team[i].currentHP.."/"..team[i].totalHP, "green")
+                else 
+                    if team[i].currentHP >= 10 then
+                        display(50,75, team[i].currentHP.."/"..team[i].totalHP, "green")
+                    else
+                        display(56,75, team[i].currentHP.."/"..team[i].totalHP, "green")
+                    end
+                end
+            else 
+                if team[i].totalHP >= 10 then
+                    if team[i].currentHP >= 10 then
+                        display(56,75, team[i].currentHP.."/"..team[i].totalHP, "green")
+                    else
+                        display(62,75, team[i].currentHP.."/"..team[i].totalHP, "green")
+                    end
+                else
+                    display(68,75, team[i].currentHP.."/"..team[i].totalHP, "green")
+                end
+            end
+        else
+            if team[i].totalHP >= 100 then
+                display(56,65, team[i].currentHP.."/"..team[i].totalHP, "red")
+            else
+                if team[i].totalHP >= 10 then
+                    display(62,75, team[i].currentHP.."/"..team[i].totalHP, "red")
+                else
+                    display(68,75, team[i].currentHP.."/"..team[i].totalHP, "red")
+                end
+            end
+        end
+        
+        display(0,85, "EXP:", "blue")
+        display(25,85,team[i].experience,"blue")
+        
+		--[[if pkrs == 0 then
+			display(0,95, "PKRS:       no", "red")
+		else
+			display(0,95, "PKRS: yes (" .. team[i].pokerus .. ")", "red")
+		end]]
+        display(0,95, "PKRS:Unimplemented", "red")
+        display(0,45, "Gender:", "green")
+        if team[i].gender == 0 then
+            display(60,45, "Genderless", "green")
+        elseif team[i].gender == 1 then
+            display(60,45, "Male", "blue")
+        elseif team[i].gender == 2 then
+            display(60,45, "Female", "red")
+        end
+        --display(60,45, "Unimplemented", "red")
+	end
+    --end
+    
+    --Controls
+    display(0,105,previousPokemonKey.."/"..nextPokemonKey..": Change Pokemon","orange")
+    display(0,115,displayKey..": Show/Hide Display","orange")
+    
+end
+
+function menu()
+    local submodemax = 5
+	tabl = input.get()
+    if tabl[displayKey] and not prev[displayKey] then
+        if debugscreenbool == true then
+            debugscreenbool = false
+        else
+            debugscreenbool = true
+        end
+    end
+	if tabl[previousPokemonKey] and not prev[previousPokemonKey] then
+		debugsubmode = debugsubmode - 1
+		if debugsubmode < 0 then
+			debugsubmode = submodemax
+		end
+	end
+	if tabl[nextPokemonKey] and not prev[nextPokemonKey] then
+		debugsubmode = debugsubmode + 1
+		if debugsubmode == submodemax + 1 then
+			debugsubmode = 0
+		end
+	end
+    
+    if tabl[textOutputKey] and not prev[textOutputKey] then
+		if textoutputbool == true then
+            textoutputbool = false
+        else
+            textoutputbool = true
+        end
+	end
+	prev = tabl
+end
 
 
 function do_pokestats()
@@ -326,7 +462,7 @@ function do_pokestats()
 			
 			--gender
 			team[i].gendervalue=team[i].personality%256
-            team[i].genderthreshold=B(((0x082547A0+28*i)+16))
+            team[i].genderthreshold=memory.readbyteunsigned(((0x082547A0+28*i)+16))
             if team[i].genderthreshold == 255 then
                 team[i].gender = 0
             elseif team[i].genderthreshold == 0 then
@@ -386,7 +522,7 @@ function do_pokestats()
 				if stringTerminated then
 					team[i].nickname[j]=255
 				else
-					team[i].nickname[j]=B(team[i].start+7+j)
+					team[i].nickname[j]=memory.readbyteunsigned(team[i].start+7+j)
 					if team[i].nickname[j] == 255 then
 						stringTerminated = true
 					end
@@ -395,7 +531,7 @@ function do_pokestats()
 			
 			--level/hp/status
 			team[i].status=D(team[i].start+80)
-			team[i].level=B(team[i].start+84)
+			team[i].level=memory.readbyteunsigned(team[i].start+84)
 			team[i].currentHP=W(team[i].start+86)
 			team[i].totalHP=W(team[i].start+88)
             team[i].isShiny=0 -- Needs trainer's secret ID to determine
@@ -427,7 +563,7 @@ function do_pokestats()
             
             local stringToSend = "POKESTATS:"
             for i=1, 6 do
-                --[[if i <= B(team_count) then]]
+                --[[if i <= memory.readbyteunsigned(team_count) then]]
                     if team[i].species >= 0 and team[i].species <= 411 then
                         stringToSend = stringToSend..(pokemonSpeciesNames[team[i].species+1]..":")
                     end
@@ -490,6 +626,14 @@ function do_pokestats()
 			file:flush()
 		end]]
 	end
+    
+    if debugscreenbool == true then
+        if team[1].species ~= nil then
+            debugScreen()
+        end
+    end
+        
+    menu()
 end
 
 gui.register(do_pokestats)

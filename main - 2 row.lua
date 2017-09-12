@@ -322,7 +322,7 @@ function expNeeded(curLevel,expGroup)
         elseif tonumber(curLevel) < 68 then
             return (((tonumber(curLevel)^3)*(150-tonumber(curLevel)))/100)
         elseif tonumber(curLevel) < 98 then
-            return (((tonumber(curLevel)^3)*((1911-10-tonumber(curLevel))/3))/500)
+            return (((tonumber(curLevel)^3)*((1911-10*tonumber(curLevel))/3))/500)
         else
             return (((tonumber(curLevel)^3)*(160-tonumber(curLevel)))/100)
         end
